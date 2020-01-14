@@ -14,8 +14,7 @@ fs.createReadStream(path.resolve(__dirname, "", cellTowerCSV))
   .on("data", tower => {
     if (tower.lat > latRange[0] && tower.lat < latRange[1]) {
       if (tower.lon > lonRange[0] && tower.lon < lonRange[1]) {
-        towers.push(tower);
-        console.log(tower);
+        writeTower(tower);
       }
     }
   })
@@ -26,3 +25,14 @@ fs.createReadStream(path.resolve(__dirname, "", cellTowerCSV))
       .on("error", err => console.error(err))
       .on("finish", () => console.log("Done writing."));
   });
+
+
+const writeTower = function(tower){
+  let row = "\n";
+  for(const t of Object.keys(tower)){
+    row += tower[t] + ",";
+  }
+
+  console.log(row);
+  fs.appendFileSync('towers.csv', row);
+}
