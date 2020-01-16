@@ -20,10 +20,6 @@ fs.createReadStream(path.resolve(__dirname, "", cellTowerCSV))
   })
   .on("end", rowCount => {
     console.log(`Parsed ${rowCount} rows`);
-    csv
-      .writeToPath(path.resolve(__dirname, "cell_towers.csv"), towers)
-      .on("error", err => console.error(err))
-      .on("finish", () => console.log("Done writing."));
   });
 
 
