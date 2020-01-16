@@ -1,0 +1,16 @@
+CREATE TABLE towers(
+	id serial PRIMARY KEY,
+	radio VARCHAR (20) NOT NULL,
+	mcc VARCHAR (20) NOT NULL,
+	net VARCHAR (20) NOT NULL,
+	area VARCHAR (20) NOT NULL,
+	cell VARCHAR (20) NOT NULL,
+	unit VARCHAR (20) NOT NULL,
+	lon VARCHAR (20) NOT NULL,
+	lat VARCHAR (20) NOT NULL,
+	range VARCHAR (20) NOT NULL,
+	samples VARCHAR (20) NOT NULL,
+	changeable VARCHAR (20) NOT NULL,
+	updated VARCHAR (20) NOT NULL,
+	averageSignal VARCHAR (20) NOT NULL
+);
