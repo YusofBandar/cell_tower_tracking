@@ -5,8 +5,6 @@ const csv = require("fast-csv");
 const latRange = [50.83, 52.45];
 const lonRange = [-1.41, 0.81];
 
-let towers = [];
-
 const cellTowerCSV = "./cell_towers_2020-01-13-T000000.csv";
 fs.createReadStream(path.resolve(__dirname, "", cellTowerCSV))
   .pipe(csv.parse({ headers: true }))
