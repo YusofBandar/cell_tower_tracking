@@ -11,6 +11,7 @@ CREATE TABLE towers(
 	range VARCHAR (20) NOT NULL,
 	samples VARCHAR (20) NOT NULL,
 	changeable VARCHAR (20) NOT NULL,
+	created VARCHAR (20) NOT NULL,
 	updated VARCHAR (20) NOT NULL,
 	averageSignal VARCHAR (20) NOT NULL
 );
