@@ -1,5 +1,5 @@
 CREATE TABLE towers(
-	id VARCHAR(20) PRIMARY KEY,
+	id SERIAL UNIQUE PRIMARY KEY,
 	radio VARCHAR (20) NOT NULL,
 	mcc numeric NOT NULL,
 	net numeric NOT NULL,
