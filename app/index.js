@@ -15,12 +15,20 @@ window.onload = () => {
         center: centre,
         radius: 40
       });
+
+      map.addListener("projection_changed",() => {
+          console.log("result", coordsToPixel(map, map.center));
+      })
     },
     () => {
       console.log("error getting location");
     }
   );
 };
+
+const coordsToPixel = (map, coord) => {
+    return map.getProjection().fromLatLngToPoint(coord);
+}
 
 const getLocation = (succ, err) => {
   navigator.geolocation.getCurrentPosition(succ, err);
