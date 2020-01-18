@@ -29,13 +29,11 @@ const getLocation = (succ, err) => {
 };
 
 const updateLocationMarker = (pixelCoords) => {
-    let svg = d3.select("svg");
-
-    svg.append("g")
-        .attr("class","centre")
-        .selectAll("circles")
+    d3.select("svg")
+        .selectAll("g")
         .data([pixelCoords])
         .enter()
+        .append("g")
         .append("circle")
         .attr("cx",pixelCoords.x)
         .attr("cy",pixelCoords.y)
@@ -46,8 +44,8 @@ const initMap = (center, zoom = 15) => {
   return new google.maps.Map(document.getElementById("map"), {
     center,
     zoom,
-    disableDefaultUI : true,
+    
     disableDoubleClickZoom : true,
-    draggable : false
+    
   });
 };
