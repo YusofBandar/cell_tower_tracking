@@ -40,7 +40,13 @@ const updateLocationMarker = pixelCoords => {
     .append("circle")
     .attr("cx", pixelCoords.x)
     .attr("cy", pixelCoords.y)
-    .attr("r", 10);
+    .attr("r", 0)
+    .style("opacity", 0)
+    .transition()
+    .style("opacity", 1)
+    .attr("r", 10)
+    .duration(1000)
+    .ease(d3.easeElastic);
 
   d3.selectAll("g circle")
     .attr("cx", pixelCoords.x)
