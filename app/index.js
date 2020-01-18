@@ -1,6 +1,6 @@
 window.onload = () => {
   let map;
-    let currentCoords;
+  let currentCoords;
   getLocation(
     result => {
       const coords = result.coords;
@@ -22,13 +22,11 @@ window.onload = () => {
     }
   );
 
-  watchPosition(
-      result => {
-        const coords = result.coords;
-        currentCoords = { lat: coords.latitude, lng: coords.longitude };
-        map.panTo(currentCoords);
-      }
-  )
+  watchPosition(result => {
+    const coords = result.coords;
+    currentCoords = { lat: coords.latitude, lng: coords.longitude };
+    map.panTo(currentCoords);
+  });
 };
 
 const coordsToPixel = (overlay, coord) => {
@@ -40,8 +38,8 @@ const getLocation = (succ, err) => {
 };
 
 const watchPosition = (succ, err) => {
-    navigator.geolocation.watchPosition(succ, err);
-}
+  navigator.geolocation.watchPosition(succ, err);
+};
 
 const updateLocationMarker = pixelCoords => {
   d3.select("svg")
