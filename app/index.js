@@ -9,7 +9,7 @@ window.onload = () => {
       
       let overlay = new google.maps.OverlayView();
       overlay.draw = () => {
-        const pixelCentre = coordsToPixel(overlay, map.center);
+        const pixelCentre = coordsToPixel(overlay, new google.maps.LatLng(centre.lat,centre.lng));
         updateLocationMarker(pixelCentre);
       };
       overlay.setMap(map);  
@@ -38,6 +38,10 @@ const updateLocationMarker = (pixelCoords) => {
         .attr("cx",pixelCoords.x)
         .attr("cy",pixelCoords.y)
         .attr("r",10);
+
+    d3.selectAll("g circle")
+        .attr("cx",pixelCoords.x)
+        .attr("cy",pixelCoords.y);
 }
 
 const initMap = (center, zoom = 15) => {
