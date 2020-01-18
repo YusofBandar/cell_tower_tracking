@@ -1,17 +1,17 @@
 window.onload = () => {
   let map;
-
+    let currentCoords;
   getLocation(
     result => {
       const coords = result.coords;
-      const centre = { lat: coords.latitude, lng: coords.longitude };
-      map = initMap(centre);
+      currentCoords = { lat: coords.latitude, lng: coords.longitude };
+      map = initMap(currentCoords);
 
       let overlay = new google.maps.OverlayView();
       overlay.draw = () => {
         const pixelCentre = coordsToPixel(
           overlay,
-          new google.maps.LatLng(centre.lat, centre.lng)
+          new google.maps.LatLng(currentCoords.lat, currentCoords.lng)
         );
         updateLocationMarker(pixelCentre);
       };
@@ -21,6 +21,14 @@ window.onload = () => {
       console.log("error getting location");
     }
   );
+
+  watchPosition(
+      result => {
+        const coords = result.coords;
+        currentCoords = { lat: coords.latitude, lng: coords.longitude };
+        map.panTo(currentCoords);
+      }
+  )
 };
 
 const coordsToPixel = (overlay, coord) => {
@@ -30,6 +38,10 @@ const coordsToPixel = (overlay, coord) => {
 const getLocation = (succ, err) => {
   navigator.geolocation.getCurrentPosition(succ, err);
 };
+
+const watchPosition = (succ, err) => {
+    navigator.geolocation.watchPosition(succ, err);
+}
 
 const updateLocationMarker = pixelCoords => {
   d3.select("svg")
