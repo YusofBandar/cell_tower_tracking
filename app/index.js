@@ -63,6 +63,29 @@ const updateLocationMarker = pixelCoords => {
     .attr("cy", pixelCoords.y);
 };
 
+const updateCellTowerMarkers = cellTowers => {
+  d3.select("svg")
+    .selectAll(".cellTower")
+    .data(cellTowers)
+    .enter()
+    .append("g")
+    .attr("class", "cellTower")
+    .append("circle")
+    .attr("cx", (d, i) => d.x)
+    .attr("cy", (d, i) => d.y)
+    .attr("r", 0)
+    .style("opacity", 0)
+    .transition()
+    .style("opacity", 1)
+    .attr("r", 10)
+    .duration(1000)
+    .ease(d3.easeElastic);
+
+  d3.selectAll(".cellTower")
+    .attr("cx", (d, i) => cellTowers[i].x)
+    .attr("cy", (d, i) => cellTowers[i].y);
+};
+
 const initMap = (center, zoom = 15) => {
   return new google.maps.Map(document.getElementById("map"), {
     center,
