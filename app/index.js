@@ -6,11 +6,13 @@ window.onload = () => {
       const coords = result.coords;
       const centre = { lat: coords.latitude, lng: coords.longitude };
       map = initMap(centre);
-     
-      map.addListener("projection_changed",() => {
-         const pixelCentre = coordsToPixel(map, map.center);
-         updateLocationMarker(pixelCentre);
-      })
+      
+      let overlay = new google.maps.OverlayView();
+      overlay.draw = () => {
+        const pixelCentre = coordsToPixel(overlay, map.center);
+        updateLocationMarker(pixelCentre);
+      };
+      overlay.setMap(map);  
     },
     () => {
       console.log("error getting location");
@@ -18,8 +20,8 @@ window.onload = () => {
   );
 };
 
-const coordsToPixel = (map, coord) => {
-    return map.getProjection().fromLatLngToPoint(coord);
+const coordsToPixel = (overlay, coord) => {
+    return overlay.getProjection().fromLatLngToContainerPixel(coord);  
 }
 
 const getLocation = (succ, err) => {
