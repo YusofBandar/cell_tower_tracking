@@ -6,13 +6,16 @@ window.onload = () => {
       const coords = result.coords;
       const centre = { lat: coords.latitude, lng: coords.longitude };
       map = initMap(centre);
-      
+
       let overlay = new google.maps.OverlayView();
       overlay.draw = () => {
-        const pixelCentre = coordsToPixel(overlay, new google.maps.LatLng(centre.lat,centre.lng));
+        const pixelCentre = coordsToPixel(
+          overlay,
+          new google.maps.LatLng(centre.lat, centre.lng)
+        );
         updateLocationMarker(pixelCentre);
       };
-      overlay.setMap(map);  
+      overlay.setMap(map);
     },
     () => {
       console.log("error getting location");
@@ -21,35 +24,34 @@ window.onload = () => {
 };
 
 const coordsToPixel = (overlay, coord) => {
-    return overlay.getProjection().fromLatLngToContainerPixel(coord);  
-}
+  return overlay.getProjection().fromLatLngToContainerPixel(coord);
+};
 
 const getLocation = (succ, err) => {
   navigator.geolocation.getCurrentPosition(succ, err);
 };
 
-const updateLocationMarker = (pixelCoords) => {
-    d3.select("svg")
-        .selectAll("g")
-        .data([pixelCoords])
-        .enter()
-        .append("g")
-        .append("circle")
-        .attr("cx",pixelCoords.x)
-        .attr("cy",pixelCoords.y)
-        .attr("r",10);
+const updateLocationMarker = pixelCoords => {
+  d3.select("svg")
+    .selectAll("g")
+    .data([pixelCoords])
+    .enter()
+    .append("g")
+    .append("circle")
+    .attr("cx", pixelCoords.x)
+    .attr("cy", pixelCoords.y)
+    .attr("r", 10);
 
-    d3.selectAll("g circle")
-        .attr("cx",pixelCoords.x)
-        .attr("cy",pixelCoords.y);
-}
+  d3.selectAll("g circle")
+    .attr("cx", pixelCoords.x)
+    .attr("cy", pixelCoords.y);
+};
 
 const initMap = (center, zoom = 15) => {
   return new google.maps.Map(document.getElementById("map"), {
     center,
     zoom,
-    
-    disableDoubleClickZoom : true,
-    
+
+    disableDoubleClickZoom: true
   });
 };
