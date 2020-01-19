@@ -1,5 +1,6 @@
 import api from "./api.js";
 import conversion from "./conversions.js";
+import mapStyling from "./mapStyling.js";
 
 window.onload = () => {
   let map;
@@ -93,7 +94,8 @@ const updateLocationMarker = pixelCoords => {
     .style("fill","rgba(255,255,255)")
     .transition()
     .style("opacity", 0.8)
-    .attr("r", 10)
+    .style("stroke","rgba(255, 255, 255")
+    .attr("r", 7)
     .duration(1000)
     .ease(d3.easeElastic);
 
@@ -133,7 +135,8 @@ const initMap = (center, zoom = 15) => {
   return new google.maps.Map(document.getElementById("map"), {
     center,
     zoom,
-
+    styles: mapStyling.styling(),
+    disableDefaultUI: true,
     disableDoubleClickZoom: true
   });
 };
