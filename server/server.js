@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
 const port = 5501;
 const db = require("./util/database");
@@ -6,6 +7,9 @@ const db = require("./util/database");
 
 db.connect();
 
+app.use(cors({
+    origin: 'http://127.0.0.1:5500/'
+  }));
 
 app.get("/", (req, res) => {
   res.send("Cell Towers API");
