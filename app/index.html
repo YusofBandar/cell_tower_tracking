@@ -25,16 +25,42 @@
             z-index: 10000;
             pointer-events: none;
         }
+
+        .centre circle {
+          stroke-width: 0px;
+          stroke-opacity: 1;
+          animation-duration: 8s;
+          animation-delay: 3s;
+          animation-name: blip;
+          animation-iteration-count: infinite;
+        }
+
+        @keyframes blip {
+          0% {
+            stroke-width: 0px;
+            stroke-opacity: 1;
+          }
+          30%{
+            stroke-width: 30px;
+            stroke-opacity: 0;
+          }
+          100%{
+            stroke-width: px;
+            stroke-opacity: 0;
+          }
+        }
       </style>
 </head>
 <body>
     <svg id="draw"></svg>
     <div id="map"></div>
     <script src="https://maps.googleapis.com/maps/api/js?key="
+    
     async defer></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
 
     <script src="./conversions.js" type="module"></script>
+    <script src="./mapStyling.js" type="module"></script>
     <script src="./api.js" type="module"></script>
     <script src="./index.js" type="module"></script>
 
