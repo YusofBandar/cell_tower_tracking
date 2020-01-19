@@ -2,7 +2,7 @@ const { Pool } = require("pg");
 let pool;
 
 const connect = () => {
-    new Pool({
+    pool = new Pool({
         user: process.env.USER,
         host: process.env.HOST,
         database: process.env.DATABASE,
@@ -11,4 +11,4 @@ const connect = () => {
       });
 }
 
-exports.connect;
+exports.connect = connect;
