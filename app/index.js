@@ -119,7 +119,7 @@ const updateCellTowerMarkers = cellTowers => {
     .style("fill", "rgba(153, 241, 55)")
     .transition()
     .style("opacity", 0.65)
-    .attr("r", 10)
+    .attr("r", 8)
     .duration(1000)
     .delay(() => {
       return Math.random() * (8000 - 500) + 500;
