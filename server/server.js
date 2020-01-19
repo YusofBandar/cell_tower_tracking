@@ -18,7 +18,7 @@ app.get("/towers", async (req, res) => {
     res.status(400).end();
     return;
   }
-  if(!("long" in query)){
+  if(!("lng" in query)){
     res.statusMessage = "Missing long query param"
     res.status(400).end();
     return;
@@ -26,7 +26,7 @@ app.get("/towers", async (req, res) => {
 
   const range = 8000;
   try {
-    res.send(await db.getCellTowersInRange(Number(query.lat),Number(query.long),range));    
+    res.send(await db.getCellTowersInRange(Number(query.lat),Number(query.lng),range));    
   } catch (error) {
       res.statusMessage = "Internal error"
       res.status(500).end();
