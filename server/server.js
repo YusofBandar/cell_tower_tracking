@@ -1,12 +1,17 @@
 const express = require("express");
 const app = express();
 const port = 5501;
+const db = require("./util/database");
+
+
+db.connect();
+
 
 app.get("/", (req, res) => {
   res.send("Cell Towers API");
 });
 
-app.get("/towers", (req, res) => {
+app.get("/towers", async (req, res) => {
   const query = req.query;
   if (!("lat" in query)) {
     res.statusMessage = "Missing lat query param"
@@ -18,8 +23,14 @@ app.get("/towers", (req, res) => {
     res.status(400).end();
     return;
   }
-  
-  res.send("getting towers");
+
+  const range = 8000;
+  try {
+    res.send(await db.getCellTowersInRange(Number(query.lat),Number(query.long),range));    
+  } catch (error) {
+      res.statusMessage = "Internal error"
+      res.status(500).end();
+  }
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
