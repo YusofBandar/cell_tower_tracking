@@ -122,7 +122,7 @@ const updateCellTowerMarkers = cellTowers => {
     .attr("r", 10)
     .duration(1000)
     .delay(() => {
-      return Math.random() * (2000 - 500) + 500;
+      return Math.random() * (8000 - 500) + 500;
     })
     .ease(d3.easeElastic);
 
