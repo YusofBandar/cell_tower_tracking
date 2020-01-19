@@ -1,11 +1,11 @@
 // taken from https://gis.stackexchange.com/a/2980
-const offsetCoordsMetres = (lat, lng, offset) => {
+const offsetCoordsMetres = (lat, lng, northOffset, eastOffset) => {
   //Earth’s radius, sphere
   const R = 6378137;
 
   //Coordinate offsets in radians
-  const dLat = offset / R;
-  const dLng = offset / (R * Math.cos((Math.PI * lat) / 180));
+  const dLat = northOffset / R;
+  const dLng = eastOffset / (R * Math.cos((Math.PI * lat) / 180));
 
   //OffsetPosition, decimal degrees
   const latO = lat + (dLat * 180) / Math.PI;
@@ -14,6 +14,7 @@ const offsetCoordsMetres = (lat, lng, offset) => {
   return [latO, lngO];
 };
 
+// taken from https://stackoverflow.com/a/11172685
 const coordsDistanceMetres = (lat1, lng1, lat2, lng2) => {
     const R = 6378.137; // Radius of earth in KM
     
