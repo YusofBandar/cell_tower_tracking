@@ -1,3 +1,5 @@
+import api from "./api.js";
+
 window.onload = () => {
   let map;
   let currentCoords;
@@ -9,11 +11,7 @@ window.onload = () => {
 
       let overlay = new google.maps.OverlayView();
       overlay.draw = () => {
-        const pixelCentre = coordsToPixel(
-          overlay,
-          new google.maps.LatLng(currentCoords.lat, currentCoords.lng)
-        );
-        updateLocationMarker(pixelCentre);
+        draw(overlay, currentCoords);
       };
       overlay.setMap(map);
     },
@@ -27,6 +25,22 @@ window.onload = () => {
     currentCoords = { lat: coords.latitude, lng: coords.longitude };
     map.panTo(currentCoords);
   });
+};
+
+const draw = (overlay, currentCoords) => {
+  const pixelCentre = coordsToPixel(
+    overlay,
+    new google.maps.LatLng(currentCoords.lat, currentCoords.lng)
+  );
+
+  api.getTowers(currentCoords.lat, currentCoords.lng).then(function(result) {
+    const cellTowers = result.map(tower =>
+      coordsToPixel(overlay, new google.maps.LatLng(tower.lat, tower.lon))
+    );
+    updateCellTowerMarkers(cellTowers);
+  });
+
+  updateLocationMarker(pixelCentre);
 };
 
 const coordsToPixel = (overlay, coord) => {
@@ -43,10 +57,11 @@ const watchPosition = (succ, err) => {
 
 const updateLocationMarker = pixelCoords => {
   d3.select("svg")
-    .selectAll("g")
+    .selectAll(".centre")
     .data([pixelCoords])
     .enter()
     .append("g")
+    .attr("class", "centre")
     .append("circle")
     .attr("cx", pixelCoords.x)
     .attr("cy", pixelCoords.y)
@@ -58,7 +73,7 @@ const updateLocationMarker = pixelCoords => {
     .duration(1000)
     .ease(d3.easeElastic);
 
-  d3.selectAll("g circle")
+  d3.selectAll(".centre circle")
     .attr("cx", pixelCoords.x)
     .attr("cy", pixelCoords.y);
 };
@@ -81,7 +96,7 @@ const updateCellTowerMarkers = cellTowers => {
     .duration(1000)
     .ease(d3.easeElastic);
 
-  d3.selectAll(".cellTower")
+  d3.selectAll(".cellTower circle")
     .attr("cx", (d, i) => cellTowers[i].x)
     .attr("cy", (d, i) => cellTowers[i].y);
 };
