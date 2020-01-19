@@ -3,15 +3,20 @@ import api from "./api.js";
 window.onload = () => {
   let map;
   let currentCoords;
+  let cellTowers = [];
   getLocation(
     result => {
       const coords = result.coords;
       currentCoords = { lat: coords.latitude, lng: coords.longitude };
       map = initMap(currentCoords);
 
+      api.getTowers(currentCoords.lat, currentCoords.lng).then(result => {
+        cellTowers = result;
+      });
+
       let overlay = new google.maps.OverlayView();
       overlay.draw = () => {
-        draw(overlay, currentCoords);
+        draw(overlay, currentCoords, cellTowers);
       };
       overlay.setMap(map);
     },
@@ -27,18 +32,17 @@ window.onload = () => {
   });
 };
 
-const draw = (overlay, currentCoords) => {
+const draw = (overlay, currentCoords, cellTowers) => {
   const pixelCentre = coordsToPixel(
     overlay,
     new google.maps.LatLng(currentCoords.lat, currentCoords.lng)
   );
 
-  api.getTowers(currentCoords.lat, currentCoords.lng).then(function(result) {
-    const cellTowers = result.map(tower =>
+  updateCellTowerMarkers(
+    cellTowers.map(tower =>
       coordsToPixel(overlay, new google.maps.LatLng(tower.lat, tower.lon))
-    );
-    updateCellTowerMarkers(cellTowers);
-  });
+    )
+  );
 
   updateLocationMarker(pixelCentre);
 };
