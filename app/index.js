@@ -1,13 +1,19 @@
 import api from "./api.js";
+import conversion from "./conversions.js";
 
 window.onload = () => {
   let map;
+
   let currentCoords;
+  let originalCoords;
+
   let cellTowers = [];
   getLocation(
     result => {
       const coords = result.coords;
       currentCoords = { lat: coords.latitude, lng: coords.longitude };
+      originalCoords = currentCoords;
+
       map = initMap(currentCoords);
 
       api.getTowers(currentCoords.lat, currentCoords.lng).then(result => {
@@ -28,6 +34,19 @@ window.onload = () => {
   watchPosition(result => {
     const coords = result.coords;
     currentCoords = { lat: coords.latitude, lng: coords.longitude };
+    if (
+      conversion.coordsDistanceMetres(
+        currentCoords.lat,
+        currentCoords.lng,
+        originalCoords.lat,
+        originalCoords.lng
+      ) >= 800
+    ) {
+      api.getTowers(currentCoords.lat, currentCoords.lng).then(result => {
+        cellTowers = result;
+      });
+      originalCoords = currentCoords;
+    }
     map.panTo(currentCoords);
   });
 };
