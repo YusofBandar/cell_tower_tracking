@@ -117,6 +117,9 @@ const updateCellTowerMarkers = cellTowers => {
     .style("opacity", 1)
     .attr("r", 10)
     .duration(1000)
+    .delay(() => {
+      return Math.random() * (2000 - 500) + 500;
+    })
     .ease(d3.easeElastic);
 
   d3.selectAll(".cellTower circle")
