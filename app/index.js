@@ -90,8 +90,9 @@ const updateLocationMarker = pixelCoords => {
     .attr("cy", pixelCoords.y)
     .attr("r", 0)
     .style("opacity", 0)
+    .style("fill","rgba(255,255,255)")
     .transition()
-    .style("opacity", 1)
+    .style("opacity", 0.8)
     .attr("r", 10)
     .duration(1000)
     .ease(d3.easeElastic);
@@ -113,8 +114,9 @@ const updateCellTowerMarkers = cellTowers => {
     .attr("cy", (d, i) => d.y)
     .attr("r", 0)
     .style("opacity", 0)
+    .style("fill", "rgba(153, 241, 55)")
     .transition()
-    .style("opacity", 1)
+    .style("opacity", 0.65)
     .attr("r", 10)
     .duration(1000)
     .delay(() => {
