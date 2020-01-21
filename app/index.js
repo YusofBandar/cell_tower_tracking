@@ -2,7 +2,6 @@ import api from "./api.js";
 import conversion from "./conversions.js";
 import mapStyling from "./mapStyling.js";
 
-
 const providers = ["EE", "Vodaphone", "O2"];
 
 window.onload = () => {
@@ -11,7 +10,7 @@ window.onload = () => {
   let currentCoords;
   let originalCoords;
 
-  updateProviders(providers,"EE");
+  updateProviders(providers, "EE");
 
   let cellTowers = [];
   getLocation(
@@ -96,10 +95,10 @@ const updateLocationMarker = pixelCoords => {
     .attr("cy", pixelCoords.y)
     .attr("r", 0)
     .style("opacity", 0)
-    .style("fill","rgba(255,255,255)")
+    .style("fill", "rgba(255,255,255)")
     .transition()
     .style("opacity", 0.8)
-    .style("stroke","rgba(255, 255, 255")
+    .style("stroke", "rgba(255, 255, 255")
     .attr("r", 7)
     .duration(1000)
     .ease(d3.easeElastic);
@@ -115,13 +114,13 @@ const updateProviders = (providers, selected) => {
     .data(providers)
     .enter()
     .append("button")
-    .html((d) => d)
-    .on("click", (d) => updateProviders(providers,d));
+    .html(d => d)
+    .on("click", d => updateProviders(providers, d));
 
-    
-  d3.selectAll(".providers button")
-    .style("opacity",(d)=> d === selected ? 1 : 0.2);
-}
+  d3.selectAll(".providers button").style("opacity", d =>
+    d === selected ? 1 : 0.2
+  );
+};
 
 const updateCellTowerMarkers = cellTowers => {
   d3.select("svg")
