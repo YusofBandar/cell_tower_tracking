@@ -35,6 +35,23 @@
           animation-iteration-count: infinite;
         }
 
+        .providers {
+          position: fixed;
+          top: 25px;
+          display: flex;
+        }
+
+        .providers button {
+          background-color: rgba(55, 55, 55, 0.83);
+          border-radius: 9px;
+          border: none;
+          display: inline-block;
+          color: rgb(255, 255, 255);
+          font-size: 19px;
+          padding: 11px 35px;
+          margin-left: 1%;
+        }
+
         @keyframes blip {
           0% {
             stroke-width: 0px;
@@ -64,5 +81,6 @@
     <script src="./api.js" type="module"></script>
     <script src="./index.js" type="module"></script>
 
+    <div class="providers"></div>
   </body>
 </html>

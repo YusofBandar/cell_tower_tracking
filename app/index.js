@@ -2,11 +2,16 @@ import api from "./api.js";
 import conversion from "./conversions.js";
 import mapStyling from "./mapStyling.js";
 
+
+const providers = ["EE", "Vodaphone", "O2"];
+
 window.onload = () => {
   let map;
 
   let currentCoords;
   let originalCoords;
+
+  updateProviders(providers,"EE");
 
   let cellTowers = [];
   getLocation(
@@ -104,6 +109,20 @@ const updateLocationMarker = pixelCoords => {
     .attr("cy", pixelCoords.y);
 };
 
+const updateProviders = (providers, selected) => {
+  d3.select(".providers")
+    .selectAll("button")
+    .data(providers)
+    .enter()
+    .append("button")
+    .html((d) => d)
+    .on("click", (d) => updateProviders(providers,d));
+
+    
+  d3.selectAll(".providers button")
+    .style("opacity",(d)=> d === selected ? 1 : 0.2);
+}
+
 const updateCellTowerMarkers = cellTowers => {
   d3.select("svg")
     .selectAll(".cellTower")
@@ -122,7 +141,7 @@ const updateCellTowerMarkers = cellTowers => {
     .attr("r", 8)
     .duration(1000)
     .delay(() => {
-      return Math.random() * (8000 - 500) + 500;
+      return Math.random() * (3000 - 500) + 500;
     })
     .ease(d3.easeElastic);
 
