@@ -172,7 +172,7 @@ const updateCellTowerMarkers = (cellTowers, selectedProvider) => {
     });
 };
 
-const initMap = (center, zoom = 15) => {
+const initMap = (center, zoom = 14) => {
   return new google.maps.Map(document.getElementById("map"), {
     center,
     zoom,
