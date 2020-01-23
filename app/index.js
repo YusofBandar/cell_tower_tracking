@@ -98,6 +98,31 @@ const watchPosition = (succ, err) => {
   navigator.geolocation.watchPosition(succ, err);
 };
 
+const updateCalLocationMarker = pixelCoords => {
+  d3.select("svg")
+    .selectAll(".calCentre")
+    .data([pixelCoords])
+    .enter()
+    .append("g")
+    .attr("class", "calCentre")
+    .append("circle")
+    .attr("cx", pixelCoords.x)
+    .attr("cy", pixelCoords.y)
+    .attr("r", 0)
+    .style("opacity", 0)
+    .style("fill", "rgba(255,255,255)")
+    .transition()
+    .style("opacity", 0.8)
+    .style("stroke", "rgba(255, 255, 255")
+    .attr("r", 7)
+    .duration(1000)
+    .ease(d3.easeElastic);
+
+  d3.selectAll(".calCentre circle")
+    .attr("cx", pixelCoords.x)
+    .attr("cy", pixelCoords.y);
+}
+
 const updateLocationMarker = pixelCoords => {
   d3.select("svg")
     .selectAll(".centre")
