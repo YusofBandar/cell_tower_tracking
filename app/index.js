@@ -88,9 +88,18 @@ window.onload = () => {
 
 const drawCalculated = (overlay, coords, accuracy, providerUpdate = false) => {
   if (coords) {
+    let accuracyCoords = conversion.offsetCoordsMetres(
+      coords.lat,
+      coords.lng,
+      accuracy,
+      accuracy
+    );
     updateCalLocationMarker(
       coordsToPixel(overlay, new google.maps.LatLng(coords.lat, coords.lng)),
-      accuracy,
+      coordsToPixel(
+        overlay,
+        new google.maps.LatLng(accuracyCoords[0], accuracyCoords[1])
+      ),
       providerUpdate
     );
   }
@@ -143,6 +152,16 @@ const watchPosition = (succ, err) => {
 };
 
 const updateCalLocationMarker = (pixelCoords, accuracy, providerUpdate) => {
+
+  const updateAccuracy = (coords, radius) => {
+    d3.selectAll(".calAccuracy circle")
+      .attr("cx", coords.x)
+      .attr("cy", coords.y)
+      .transition()
+      .style("opacity", 0.75)
+      .attr("r", radius);
+  };
+
   d3.select("svg")
     .selectAll(".calCentre")
     .data([pixelCoords])
@@ -161,18 +180,40 @@ const updateCalLocationMarker = (pixelCoords, accuracy, providerUpdate) => {
     .duration(1000)
     .ease(d3.easeElastic);
 
+  d3.select("svg")
+    .selectAll(".calAccuracy")
+    .data([pixelCoords])
+    .enter()
+    .append("g")
+    .attr("class", "calAccuracy")
+    .append("circle")
+    .attr("cx", pixelCoords.x)
+    .attr("cy", pixelCoords.y)
+    .attr("r", 0)
+    .style("opacity", 0)
+    .style("fill", "rgba(181, 181, 181)")
+
   if (providerUpdate) {
+    d3.selectAll(".calAccuracy circle")
+    .transition()
+    .style("opacity", 0.75)
+    .attr("r", 0);
+
     d3.selectAll(".calCentre circle")
       .transition()
       .style("opacity", 0.75)
       .attr("r", 7)
       .duration(1000)
       .attr("cx", pixelCoords.x)
-      .attr("cy", pixelCoords.y);
+      .attr("cy", pixelCoords.y)
+      .on("end", () => {
+        updateAccuracy(pixelCoords, accuracy.x - pixelCoords.x);
+      });
   } else {
     d3.selectAll(".calCentre circle")
       .attr("cx", pixelCoords.x)
       .attr("cy", pixelCoords.y);
+    updateAccuracy(pixelCoords, accuracy.x - pixelCoords.x);
   }
 };
 
