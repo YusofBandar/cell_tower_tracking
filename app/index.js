@@ -1,6 +1,7 @@
 import api from "./api.js";
 import conversion from "./conversions.js";
 import mapStyling from "./mapStyling.js";
+import key from "./key.js"
 
 const providers = [
   { provider: "BT", net: [0, 76, 77], mcc: 23430, mnc: 23430 },
@@ -136,7 +137,7 @@ const getCalLocation = (cellTowers, selected) => {
     });
 
   return api.getGeoLocation(
-    "",
+    key.key(),
     selected,
     connectedTowers
   );
