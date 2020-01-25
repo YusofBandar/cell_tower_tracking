@@ -48,9 +48,10 @@ window.onload = () => {
           if ("location" in result) {
             calculatedCoords = result.location;
             calculatedAccuracy = result.accuracy;
+            drawCalculated(overlay, calculatedCoords, calculatedAccuracy);
           }
         });
-        drawCalculated(overlay, calculatedCoords, calculatedAccuracy);
+        
       });
     },
     () => {
@@ -112,8 +113,6 @@ const draw = (overlay, currentCoords, cellTowers, provider) => {
   });
   updateCellTowerMarkers(cellTowerMarkers, provider);
   updateLocationMarker(pixelCentre);
-
-  getCalLocation(cellTowers, provider);
 };
 
 const coordsToPixel = (overlay, coord) => {
@@ -138,7 +137,7 @@ const getCalLocation = (cellTowers, selected) => {
 
   return api.getGeoLocation(
     "",
-    selected.provider,
+    selected,
     connectedTowers
   );
 };
@@ -159,10 +158,9 @@ const updateCalLocationMarker = pixelCoords => {
     .attr("cy", pixelCoords.y)
     .attr("r", 0)
     .style("opacity", 0)
-    .style("fill", "rgba(255,255,255)")
+    .style("fill", "rgba(181, 181, 181)")
     .transition()
-    .style("opacity", 0.8)
-    .style("stroke", "rgba(255, 255, 255")
+    .style("opacity", 0.75)
     .attr("r", 7)
     .duration(1000)
     .ease(d3.easeElastic);
@@ -251,7 +249,7 @@ const initMap = (center, zoom = 14) => {
     center,
     zoom,
     styles: mapStyling.styling(),
-    disableDefaultUI: true,
+    disableDefaultUI: false,
     disableDoubleClickZoom: true
   });
 };
