@@ -1,7 +1,7 @@
 import api from "./api.js";
 import conversion from "./conversions.js";
 import mapStyling from "./mapStyling.js";
-import key from "./key.js"
+import key from "./key.js";
 
 const providers = [
   { provider: "BT", net: [0, 76, 77], mcc: 23430, mnc: 23430 },
@@ -49,10 +49,9 @@ window.onload = () => {
           if ("location" in result) {
             calculatedCoords = result.location;
             calculatedAccuracy = result.accuracy;
-            drawCalculated(overlay, calculatedCoords, calculatedAccuracy);
+            drawCalculated(overlay, calculatedCoords, calculatedAccuracy, true);
           }
         });
-        
       });
     },
     () => {
@@ -87,11 +86,12 @@ window.onload = () => {
   });
 };
 
-const drawCalculated = (overlay, coords, accuracy) => {
+const drawCalculated = (overlay, coords, accuracy, providerUpdate = false) => {
   if (coords) {
     updateCalLocationMarker(
       coordsToPixel(overlay, new google.maps.LatLng(coords.lat, coords.lng)),
-      accuracy
+      accuracy,
+      providerUpdate
     );
   }
 };
@@ -135,18 +135,14 @@ const getCalLocation = (cellTowers, selected) => {
       };
     });
 
-  return api.getGeoLocation(
-    key.key(),
-    selected,
-    connectedTowers
-  );
+  return api.getGeoLocation(key.key(), selected, connectedTowers);
 };
 
 const watchPosition = (succ, err) => {
   navigator.geolocation.watchPosition(succ, err);
 };
 
-const updateCalLocationMarker = pixelCoords => {
+const updateCalLocationMarker = (pixelCoords, accuracy, providerUpdate) => {
   d3.select("svg")
     .selectAll(".calCentre")
     .data([pixelCoords])
@@ -165,9 +161,19 @@ const updateCalLocationMarker = pixelCoords => {
     .duration(1000)
     .ease(d3.easeElastic);
 
-  d3.selectAll(".calCentre circle")
-    .attr("cx", pixelCoords.x)
-    .attr("cy", pixelCoords.y);
+  if (providerUpdate) {
+    d3.selectAll(".calCentre circle")
+      .transition()
+      .style("opacity", 0.75)
+      .attr("r", 7)
+      .duration(1000)
+      .attr("cx", pixelCoords.x)
+      .attr("cy", pixelCoords.y);
+  } else {
+    d3.selectAll(".calCentre circle")
+      .attr("cx", pixelCoords.x)
+      .attr("cy", pixelCoords.y);
+  }
 };
 
 const updateLocationMarker = pixelCoords => {
