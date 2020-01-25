@@ -9,9 +9,11 @@ const getGeoLocation = (apiKey, carrier, cellTowers) => {
     homeMobileCountryCode: carrier.mcc,
     homeMobileNetworkCode: carrier.mnc,
     considerIp: "false",
-    carrier,
+    radioType: "gsm",
     cellTowers
   };
+
+  console.log(body);
 
   return postRequest(
     `https://www.googleapis.com/geolocation/v1/geolocate?key=${apiKey}`,
