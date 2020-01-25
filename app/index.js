@@ -88,7 +88,6 @@ window.onload = () => {
 };
 
 const drawCalculated = (overlay, coords, accuracy) => {
-  console.log(coords);
   if (coords) {
     updateCalLocationMarker(
       coordsToPixel(overlay, new google.maps.LatLng(coords.lat, coords.lng)),

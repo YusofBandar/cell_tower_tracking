@@ -13,8 +13,6 @@ const getGeoLocation = (apiKey, carrier, cellTowers) => {
     cellTowers
   };
 
-  console.log(body);
-
   return postRequest(
     `https://www.googleapis.com/geolocation/v1/geolocate?key=${apiKey}`,
     body
