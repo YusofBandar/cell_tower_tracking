@@ -4,10 +4,6 @@ const getTowers = (lat, lng) => {
   return getRequest(`${baseUrl}/towers?lat=${lat}&lng=${lng}`);
 };
 
-export default {
-  getTowers
-};
-
 const getRequest = url => {
   return new Promise((resolve, reject) => {
     fetch(url, {
@@ -26,3 +22,7 @@ const getRequest = url => {
       });
   });
 };
+
+export default {
+    getTowers
+  };
