@@ -3,9 +3,9 @@ import conversion from "./conversions.js";
 import mapStyling from "./mapStyling.js";
 
 const providers = [
-  { provider: "BT", net: [0, 76, 77] },
-  { provider: "O2", net: [2, 10, 11] },
-  { provider: "Vodaphone", net: [7, 15, 91, 92] }
+  { provider: "BT", net: [0, 76, 77], mcc: 23430, mnc: 23430 },
+  { provider: "O2", net: [2, 10, 11], mcc: 23410, mnc: 23410 },
+  { provider: "Vodaphone", net: [7, 15, 91, 92], mcc: 23415, mnc: 23415 }
 ];
 
 window.onload = () => {
@@ -13,6 +13,9 @@ window.onload = () => {
 
   let currentCoords;
   let originalCoords;
+
+  let calculatedCoords;
+  let calculatedAccuracy;
 
   let cellTowers = [];
 
@@ -33,12 +36,21 @@ window.onload = () => {
       let overlay = new google.maps.OverlayView();
       overlay.draw = () => {
         draw(overlay, currentCoords, cellTowers, selectedProvider);
+        drawCalculated(overlay, calculatedCoords, calculatedAccuracy);
       };
       overlay.setMap(map);
 
       updateProviders(providers, "BT", provider => {
         selectedProvider = provider;
         draw(overlay, currentCoords, cellTowers, selectedProvider);
+
+        getCalLocation(cellTowers, selectedProvider).then(result => {
+          if ("location" in result) {
+            calculatedCoords = result.location;
+            calculatedAccuracy = result.accuracy;
+          }
+        });
+        drawCalculated(overlay, calculatedCoords, calculatedAccuracy);
       });
     },
     () => {
@@ -47,6 +59,13 @@ window.onload = () => {
   );
 
   watchPosition(result => {
+    getCalLocation(cellTowers, selectedProvider).then(result => {
+      if ("location" in result) {
+        calculatedCoords = result.location;
+        calculatedAccuracy = result.accuracy;
+      }
+    });
+
     const coords = result.coords;
     currentCoords = { lat: coords.latitude, lng: coords.longitude };
     if (
@@ -66,6 +85,16 @@ window.onload = () => {
   });
 };
 
+const drawCalculated = (overlay, coords, accuracy) => {
+  console.log(coords);
+  if (coords) {
+    updateCalLocationMarker(
+      coordsToPixel(overlay, new google.maps.LatLng(coords.lat, coords.lng)),
+      accuracy
+    );
+  }
+};
+
 const draw = (overlay, currentCoords, cellTowers, provider) => {
   const pixelCentre = coordsToPixel(
     overlay,
@@ -82,8 +111,9 @@ const draw = (overlay, currentCoords, cellTowers, provider) => {
     return tower;
   });
   updateCellTowerMarkers(cellTowerMarkers, provider);
-
   updateLocationMarker(pixelCentre);
+
+  getCalLocation(cellTowers, provider);
 };
 
 const coordsToPixel = (overlay, coord) => {
@@ -92,6 +122,25 @@ const coordsToPixel = (overlay, coord) => {
 
 const getLocation = (succ, err) => {
   navigator.geolocation.getCurrentPosition(succ, err);
+};
+
+const getCalLocation = (cellTowers, selected) => {
+  let connectedTowers = cellTowers
+    .filter(d => (selected.net.indexOf(Number(d.net)) < 0 ? false : true))
+    .map(d => {
+      return {
+        cellId: d.cell,
+        locationAreaCode: d.area,
+        mobileCountryCode: d.mcc,
+        mobileNetworkCode: d.net
+      };
+    });
+
+  return api.getGeoLocation(
+    "",
+    selected.provider,
+    connectedTowers
+  );
 };
 
 const watchPosition = (succ, err) => {
@@ -121,7 +170,7 @@ const updateCalLocationMarker = pixelCoords => {
   d3.selectAll(".calCentre circle")
     .attr("cx", pixelCoords.x)
     .attr("cy", pixelCoords.y);
-}
+};
 
 const updateLocationMarker = pixelCoords => {
   d3.select("svg")
