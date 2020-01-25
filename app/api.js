@@ -41,7 +41,7 @@ const getRequest = url => {
 const postRequest = (url, body) => {
   return new Promise((resolve, reject) => {
     fetch(url, {
-      method: "get",
+      method: "post",
       body: JSON.stringify(body)
     })
       .then(result => {
