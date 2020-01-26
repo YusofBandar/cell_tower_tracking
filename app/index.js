@@ -158,7 +158,7 @@ const updateCalLocationMarker = (pixelCoords, accuracy, providerUpdate) => {
       .attr("cx", coords.x)
       .attr("cy", coords.y)
       .transition()
-      .style("opacity", 0.75)
+      .style("opacity", 0.2)
       .attr("r", radius);
   };
 
@@ -191,12 +191,12 @@ const updateCalLocationMarker = (pixelCoords, accuracy, providerUpdate) => {
     .attr("cy", pixelCoords.y)
     .attr("r", 0)
     .style("opacity", 0)
-    .style("fill", "rgba(181, 181, 181)")
+    .style("fill", "rgba(197, 197, 197)")
 
   if (providerUpdate) {
     d3.selectAll(".calAccuracy circle")
     .transition()
-    .style("opacity", 0.75)
+    .style("opacity", 0.2)
     .attr("r", 0);
 
     d3.selectAll(".calCentre circle")
