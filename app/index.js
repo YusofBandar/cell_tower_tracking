@@ -45,13 +45,20 @@ window.onload = () => {
         selectedProvider = provider;
         draw(overlay, currentCoords, cellTowers, selectedProvider);
 
-        getCalLocation(cellTowers, selectedProvider).then(result => {
-          if ("location" in result) {
-            calculatedCoords = result.location;
-            calculatedAccuracy = result.accuracy;
-            drawCalculated(overlay, calculatedCoords, calculatedAccuracy, true);
+        getCalLocation(cellTowers, selectedProvider, currentCoords).then(
+          result => {
+            if ("location" in result) {
+              calculatedCoords = result.location;
+              calculatedAccuracy = result.accuracy;
+              drawCalculated(
+                overlay,
+                calculatedCoords,
+                calculatedAccuracy,
+                true
+              );
+            }
           }
-        });
+        );
       });
     },
     () => {
@@ -60,13 +67,6 @@ window.onload = () => {
   );
 
   watchPosition(result => {
-    getCalLocation(cellTowers, selectedProvider).then(result => {
-      if ("location" in result) {
-        calculatedCoords = result.location;
-        calculatedAccuracy = result.accuracy;
-      }
-    });
-
     const coords = result.coords;
     currentCoords = { lat: coords.latitude, lng: coords.longitude };
     if (
@@ -82,6 +82,14 @@ window.onload = () => {
       });
       originalCoords = currentCoords;
     }
+
+    getCalLocation(cellTowers, selectedProvider, currentCoords).then(result => {
+      if ("location" in result) {
+        calculatedCoords = result.location;
+        calculatedAccuracy = result.accuracy;
+      }
+    });
+
     map.panTo(currentCoords);
   });
 };
@@ -132,9 +140,18 @@ const getLocation = (succ, err) => {
   navigator.geolocation.getCurrentPosition(succ, err);
 };
 
-const getCalLocation = (cellTowers, selected) => {
+const getCalLocation = (cellTowers, selected, currentCoords) => {
   let connectedTowers = cellTowers
     .filter(d => (selected.net.indexOf(Number(d.net)) < 0 ? false : true))
+    .filter(
+      d =>
+        conversion.coordsDistanceMetres(
+          d.lat,
+          d.lon,
+          currentCoords.lat,
+          currentCoords.lng
+        ) <= 400
+    )
     .map(d => {
       return {
         cellId: d.cell,
@@ -144,6 +161,7 @@ const getCalLocation = (cellTowers, selected) => {
       };
     });
 
+  console.log(connectedTowers);
   return api.getGeoLocation(key.key(), selected, connectedTowers);
 };
 
@@ -152,7 +170,6 @@ const watchPosition = (succ, err) => {
 };
 
 const updateCalLocationMarker = (pixelCoords, accuracy, providerUpdate) => {
-
   const updateAccuracy = (coords, radius) => {
     d3.selectAll(".calAccuracy circle")
       .attr("cx", coords.x)
@@ -191,13 +208,13 @@ const updateCalLocationMarker = (pixelCoords, accuracy, providerUpdate) => {
     .attr("cy", pixelCoords.y)
     .attr("r", 0)
     .style("opacity", 0)
-    .style("fill", "rgba(197, 197, 197)")
+    .style("fill", "rgba(197, 197, 197)");
 
   if (providerUpdate) {
     d3.selectAll(".calAccuracy circle")
-    .transition()
-    .style("opacity", 0.2)
-    .attr("r", 0);
+      .transition()
+      .style("opacity", 0.2)
+      .attr("r", 0);
 
     d3.selectAll(".calCentre circle")
       .transition()
@@ -297,6 +314,6 @@ const initMap = (center, zoom = 14) => {
     zoom,
     styles: mapStyling.styling(),
     disableDefaultUI: false,
-    disableDoubleClickZoom: true
+    disableDoubleClickZoom: false
   });
 };
