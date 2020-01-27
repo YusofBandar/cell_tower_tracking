@@ -161,7 +161,6 @@ const getCalLocation = (cellTowers, selected, currentCoords) => {
       };
     });
 
-  console.log(connectedTowers);
   return api.getGeoLocation(key.key(), selected, connectedTowers);
 };
 
