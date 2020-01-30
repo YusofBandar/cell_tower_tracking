@@ -45,8 +45,8 @@ window.onload = () => {
         selectedProvider = provider;
         draw(overlay, currentCoords, cellTowers, selectedProvider);
 
-        getCalLocation(cellTowers, selectedProvider, currentCoords).then(
-          result => {
+        getCalLocation(cellTowers, selectedProvider, currentCoords)
+          .then(result => {
             if ("location" in result) {
               calculatedCoords = result.location;
               calculatedAccuracy = result.accuracy;
@@ -57,8 +57,7 @@ window.onload = () => {
                 true
               );
             }
-          }
-        );
+          })
       });
     },
     () => {
@@ -83,12 +82,13 @@ window.onload = () => {
       originalCoords = currentCoords;
     }
 
-    getCalLocation(cellTowers, selectedProvider, currentCoords).then(result => {
-      if ("location" in result) {
-        calculatedCoords = result.location;
-        calculatedAccuracy = result.accuracy;
-      }
-    });
+    getCalLocation(cellTowers, selectedProvider, currentCoords)
+      .then(result => {
+        if ("location" in result) {
+          calculatedCoords = result.location;
+          calculatedAccuracy = result.accuracy;
+        }
+      });
 
     map.panTo(currentCoords);
   });
@@ -195,6 +195,12 @@ const updateCalLocationMarker = (pixelCoords, accuracy, providerUpdate) => {
     .attr("r", 7)
     .duration(1000)
     .ease(d3.easeElastic);
+
+  d3.select("svg")
+    .selectAll(".calCentre")
+    .data([pixelCoords])
+    .exit()
+    .remove();
 
   d3.select("svg")
     .selectAll(".calAccuracy")
