@@ -1,6 +1,17 @@
+const selectors = {
+    location : {
+        sel : ".centre",
+        marker : ".centre circle"
+    },
+    calculated : {
+        sel : ".calCentre",
+        marker : ".calCentre circle"
+    }
+}
+
 const updateLocationMarker = (svg, pixelCoords) => {
   svg
-    .selectAll(".centre")
+    .selectAll(this.selectors.location.sel)
     .data([pixelCoords])
     .enter()
     .append("g")
@@ -18,7 +29,7 @@ const updateLocationMarker = (svg, pixelCoords) => {
     .duration(1000)
     .ease(d3.easeElastic);
 
-  d3.selectAll(".centre circle")
+  d3.selectAll(this.selectors.location.marker)
     .attr("cx", pixelCoords.x)
     .attr("cy", pixelCoords.y);
 };
@@ -30,7 +41,7 @@ const updateCalculatedLocationMarker = (
   isProviderUpdate
 ) => {
   svg
-    .selectAll(".calCentre")
+    .selectAll(this.selectors.calculated.sel)
     .data([pixelCoords])
     .enter()
     .append("g")
@@ -48,7 +59,7 @@ const updateCalculatedLocationMarker = (
     .ease(d3.easeElastic);
 
   svg
-    .selectAll(".calCentre")
+    .selectAll(this.selectors.calculated.sel)
     .data([pixelCoords])
     .exit()
     .remove();
@@ -72,7 +83,7 @@ const updateCalculatedLocationMarker = (
       .style("opacity", 0.2)
       .attr("r", 0);
 
-    d3.selectAll(".calCentre circle")
+    d3.selectAll(this.selectors.calculated.circle)
       .transition()
       .style("opacity", 0.75)
       .attr("r", 7)
@@ -83,7 +94,7 @@ const updateCalculatedLocationMarker = (
         this.updateLocationAccuracy(pixelCoords, accuracy.x - pixelCoords.x);
       });
   } else {
-    d3.selectAll(".calCentre circle")
+    d3.selectAll(this.selectors.calculated.circle)
       .attr("cx", pixelCoords.x)
       .attr("cy", pixelCoords.y);
     this.updateLocationAccuracy(pixelCoords, accuracy.x - pixelCoords.x);
