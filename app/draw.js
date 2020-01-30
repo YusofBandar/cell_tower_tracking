@@ -166,3 +166,10 @@ const updateProviders = (providers, selected, onClick) => {
     d.provider === selected ? 1 : 0.2
   );
 };
+
+export default {
+    updateLocationMarker,
+    updateCalculatedLocationMarker,
+    updateCellTowerMarkers,
+    updateProviders
+}
