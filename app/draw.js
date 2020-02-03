@@ -46,8 +46,9 @@ const updateCalculatedLocationMarker = (
   svg,
   pixelCoords,
   accuracy,
-  isProviderUpdate
+  isProviderUpdate = false
 ) => {
+
   svg
     .selectAll(selectors.calculated.sel)
     .data([pixelCoords])
@@ -99,13 +100,13 @@ const updateCalculatedLocationMarker = (
       .attr("cx", pixelCoords.x)
       .attr("cy", pixelCoords.y)
       .on("end", () => {
-        updateLocationAccuracy(pixelCoords, accuracy.x - pixelCoords.x);
+        updateLocationAccuracy(pixelCoords, accuracy);
       });
   } else {
     d3.selectAll(selectors.calculated.marker)
       .attr("cx", pixelCoords.x)
       .attr("cy", pixelCoords.y);
-    updateLocationAccuracy(pixelCoords, accuracy.x - pixelCoords.x);
+    updateLocationAccuracy(pixelCoords, accuracy);
   }
 };
 
@@ -142,7 +143,7 @@ const updateCellTowerMarkers = (svg, cellTowers, selectedProvider) => {
     })
     .ease(d3.easeElastic);
 
-  d3.selectAll(selectors.cellTower.sel.marker)
+  d3.selectAll(selectors.cellTower.marker)
     .attr("cx", (d, i) => cellTowers[i].x)
     .attr("cy", (d, i) => cellTowers[i].y)
     .style("opacity", d => {
