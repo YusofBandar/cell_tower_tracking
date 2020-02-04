@@ -45,6 +45,7 @@ const postRequest = (url, body) => {
       body: JSON.stringify(body)
     })
       .then(result => {
+        result.status === 404 && reject(result);
         return result;
       })
       .then(result => {
