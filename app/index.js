@@ -116,7 +116,8 @@ const overlayDraw = (
     draw.updateCellTowerMarkers(svg, cellTowerMarkers, provider);
     draw.updateLocationMarker(svg, pixelCentre);
   });
-  calculatedLocation(overlay, accuracy, currentCoords);
+  "location" in accuracy && calculatedLocation(overlay, accuracy, currentCoords); 
+
 };
 
 const initMap = (center, zoom = 14) => {
