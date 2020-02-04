@@ -27,26 +27,24 @@ window.onload = () => {
       api.getTowers(coords.lat, coords.lng).then(towers => {
         let overlay = new google.maps.OverlayView();
 
-        location
-          .getCalculatedLocation(towers, selectedProvider, coords)
-          .then(calcLocation => {
-            if ("location" in calcLocation) {
-              accuracy = calcLocation;
-              calculatedLocation(overlay, calcLocation, coords);
-            }
-          });
+        getCalculatedLocation(overlay, towers, selectedProvider, coords).then(
+          calcLocation => {
+            
+            accuracy = calcLocation;
+          }
+        );
 
         d3.select(".providers").call(sel => {
           draw.updateProviders(sel, providers, "O2", provider => {
             selectedProvider = provider;
-            location
-              .getCalculatedLocation(towers, selectedProvider, coords)
-              .then(calcLocation => {
-                if ("location" in calcLocation) {
-                  accuracy = calcLocation;
-                  calculatedLocation(overlay, calcLocation, coords);
-                }
-              });
+            getCalculatedLocation(
+              overlay,
+              towers,
+              selectedProvider,
+              coords
+            ).then(calcLocation => {
+              accuracy = calcLocation;
+            });
           });
         });
 
@@ -59,6 +57,20 @@ window.onload = () => {
     .catch(err => {
       console.err(err);
     });
+};
+
+const getCalculatedLocation = (overlay, towers, selectedProvider, coords) => {
+  return new Promise((resolve, reject) => {
+    location
+      .getCalculatedLocation(towers, selectedProvider, coords)
+      .then(calcLocation => {
+        if ("location" in calcLocation) {
+          calculatedLocation(overlay, calcLocation, coords);
+          resolve(calcLocation);
+        }
+      })
+      .catch(err => {});
+  });
 };
 
 const calculatedLocation = (overlay, calcLocation, coords) => {
@@ -116,8 +128,8 @@ const overlayDraw = (
     draw.updateCellTowerMarkers(svg, cellTowerMarkers, provider);
     draw.updateLocationMarker(svg, pixelCentre);
   });
-  "location" in accuracy && calculatedLocation(overlay, accuracy, currentCoords); 
-
+  "location" in accuracy &&
+    calculatedLocation(overlay, accuracy, currentCoords);
 };
 
 const initMap = (center, zoom = 14) => {
@@ -125,7 +137,7 @@ const initMap = (center, zoom = 14) => {
     center,
     zoom,
     styles: mapStyling.styling(),
-    disableDefaultUI: false,
+    disableDefaultUI: true,
     disableDoubleClickZoom: false
   });
 };
