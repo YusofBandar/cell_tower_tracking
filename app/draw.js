@@ -48,7 +48,6 @@ const updateCalculatedLocationMarker = (
   accuracy,
   isProviderUpdate = false
 ) => {
-
   svg
     .selectAll(selectors.calculated.sel)
     .data([pixelCoords])
@@ -151,8 +150,8 @@ const updateCellTowerMarkers = (svg, cellTowers, selectedProvider) => {
     });
 };
 
-const updateProviders = (providers, selected, onClick) => {
-  d3.select(".providers")
+const updateProviders = (selection, providers, selected, onClick) => {
+  selection
     .selectAll("button")
     .data(providers)
     .enter()
@@ -160,7 +159,7 @@ const updateProviders = (providers, selected, onClick) => {
     .html(d => d.provider)
     .on("click", d => {
       onClick(d);
-      updateProviders(providers, d.provider);
+      updateProviders(selection, providers, d.provider, onClick);
     });
 
   d3.selectAll(".providers button").style("opacity", d =>
@@ -169,8 +168,8 @@ const updateProviders = (providers, selected, onClick) => {
 };
 
 export default {
-    updateLocationMarker,
-    updateCalculatedLocationMarker,
-    updateCellTowerMarkers,
-    updateProviders
-}
+  updateLocationMarker,
+  updateCalculatedLocationMarker,
+  updateCellTowerMarkers,
+  updateProviders
+};

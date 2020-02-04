@@ -36,17 +36,23 @@ window.onload = () => {
             }
           });
 
-        draw.updateProviders(providers, "O2", provider => {
-          selectedProvider = provider;
-          location
-            .getCalculatedLocation(towers, selectedProvider, coords)
-            .then(calcLocation => {
-              if ("location" in calcLocation) {
-                accuracy = calcLocation;
-                calculatedLocation(overlay, calcLocation, coords);
-              }
+
+          d3.select(".providers").call((sel) => {
+            draw.updateProviders(sel, providers, "O2", provider => {
+              selectedProvider = provider;
+              location
+                .getCalculatedLocation(towers, selectedProvider, coords)
+                .then(calcLocation => {
+                  if ("location" in calcLocation) {
+                    accuracy = calcLocation;
+                    calculatedLocation(overlay, calcLocation, coords);
+                  }
+                });
             });
-        });
+          })
+          
+
+    
         overlay.draw = () => {
           overlayDraw(overlay, coords, towers, selectedProvider, accuracy);
         };
@@ -73,11 +79,10 @@ const calculatedLocation = (overlay, calcLocation, coords) => {
     overlay,
     new google.maps.LatLng(accuracyCoords[0], accuracyCoords[1])
   );
-  draw.updateCalculatedLocationMarker(
-    d3.select("svg"),
-    centrePixel,
-    Math.abs(accuracy.x - centrePixel.x)
-  );
+
+  d3.select("svg").call(svg => {
+    draw.updateCalculatedLocationMarker(svg, centrePixel, Math.abs(accuracy.x - centrePixel.x));
+  })
 };
 
 const coordsToPixel = (overlay, coord) => {
@@ -106,8 +111,10 @@ const overlayDraw = (
     return tower;
   });
 
-  draw.updateCellTowerMarkers(d3.select("svg"), cellTowerMarkers, provider);
-  draw.updateLocationMarker(d3.select("svg"), pixelCentre);
+  d3.select("svg").call((svg) => {
+    draw.updateCellTowerMarkers(svg, cellTowerMarkers, provider);
+    draw.updateLocationMarker(svg, pixelCentre);
+  })
   calculatedLocation(overlay, accuracy, currentCoords);
 };
 
