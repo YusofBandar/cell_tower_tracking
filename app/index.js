@@ -13,7 +13,7 @@ const providers = [
 window.onload = () => {
   let map;
   let selectedProvider = providers[1];
-  let accuracy = {};
+  let accuracy = undefined;
 
   location
     .getLocation()
@@ -29,7 +29,6 @@ window.onload = () => {
 
         getCalculatedLocation(overlay, towers, selectedProvider, coords).then(
           calcLocation => {
-            
             accuracy = calcLocation;
           }
         );
@@ -37,14 +36,17 @@ window.onload = () => {
         d3.select(".providers").call(sel => {
           draw.updateProviders(sel, providers, "O2", provider => {
             selectedProvider = provider;
-            getCalculatedLocation(
-              overlay,
-              towers,
-              selectedProvider,
-              coords
-            ).then(calcLocation => {
-              accuracy = calcLocation;
-            });
+            overlayDraw(overlay, coords, towers, selectedProvider, accuracy);
+            getCalculatedLocation(overlay, towers, selectedProvider, coords)
+              .then(calcLocation => {
+                accuracy = calcLocation;
+              })
+              .catch(err => {
+                accuracy = undefined;
+                d3.select("svg").call((svg) => {
+                  draw.updateCalculatedLocationMarker(svg, undefined, undefined);
+                })
+              });
           });
         });
 
@@ -68,16 +70,22 @@ const getCalculatedLocation = (overlay, towers, selectedProvider, coords) => {
           calculatedLocation(overlay, calcLocation, coords);
           resolve(calcLocation);
         }
+        reject();
       })
       .catch(err => {
-        d3.select("svg").call((svg) => {
-          draw.updateCalculatedLocationMarker(svg, undefined, undefined);
-        })
+        reject(err);
       });
   });
 };
 
 const calculatedLocation = (overlay, calcLocation, coords) => {
+  if (!calcLocation) {
+    d3.select("svg").call(svg => {
+      draw.updateCalculatedLocationMarker(svg, undefined, 0);
+    });
+    return;
+  }
+
   let accuracyCoords = conversion.offsetCoordsMetres(
     coords.lat,
     coords.lng,
@@ -132,8 +140,8 @@ const overlayDraw = (
     draw.updateCellTowerMarkers(svg, cellTowerMarkers, provider);
     draw.updateLocationMarker(svg, pixelCentre);
   });
-  "location" in accuracy &&
-    calculatedLocation(overlay, accuracy, currentCoords);
+
+  calculatedLocation(overlay, accuracy, currentCoords);
 };
 
 const initMap = (center, zoom = 14) => {
