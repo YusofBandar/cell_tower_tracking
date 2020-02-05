@@ -48,6 +48,24 @@ const updateCalculatedLocationMarker = (
   accuracy,
   isProviderUpdate = false
 ) => {
+  if (!pixelCoords) {
+    svg
+      .selectAll(selectors.calculated.sel)
+      .transition()
+      .style("opacity", 0.2)
+      .attr("r", 0)
+      .remove();
+
+    svg
+      .selectAll(selectors.accuracy.sel)
+      .transition()
+      .style("opacity", 0.2)
+      .attr("r", 0)
+      .remove();
+
+      return;
+  }
+
   svg
     .selectAll(selectors.calculated.sel)
     .data([pixelCoords])
