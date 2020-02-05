@@ -29,34 +29,38 @@ const watchLocation = () => {
 };
 
 const getCalculatedLocation = (cellTowers, selectedProvider, currentCoords) => {
+ 
   let connectedTowers = cellTowers
     .filter(d =>
       selectedProvider.net.indexOf(Number(d.net)) < 0 ? false : true
     )
-    .filter(
-      d =>
-        conversion.coordsDistanceMetres(
-          d.lat,
-          d.lon,
-          currentCoords.lat,
-          currentCoords.lng
-        ) <= 400
-    )
+    .map(d => {
+      d.distance = conversion.coordsDistanceMetres(
+        d.lat,
+        d.lon,
+        currentCoords.lat,
+        currentCoords.lng
+      );
+
+      return d;
+    })
+    .sort((a, b) => a.distance - b.distance)
     .map(d => {
       return {
         cellId: d.cell,
         locationAreaCode: d.area,
         mobileCountryCode: d.mcc,
-        mobileNetworkCode: d.net
+        mobileNetworkCode: d.net,
+        distance: d.distance
       };
     });
-
-  return api.getGeoLocation(key.key(), selectedProvider, connectedTowers);
+  const topN = parseInt(connectedTowers.length * (30/100));
+  
+  return api.getGeoLocation(key.key(), selectedProvider, connectedTowers.slice(0, topN));
 };
 
-
 export default {
-    getLocation,
-    watchLocation,
-    getCalculatedLocation
-  };
+  getLocation,
+  watchLocation,
+  getCalculatedLocation
+};
