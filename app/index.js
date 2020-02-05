@@ -57,7 +57,8 @@ window.onload = () => {
       });
     })
     .catch(err => {
-      console.err(err);
+      map = initMap();
+      console.log(err);
     });
 };
 
