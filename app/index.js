@@ -69,7 +69,11 @@ const getCalculatedLocation = (overlay, towers, selectedProvider, coords) => {
           resolve(calcLocation);
         }
       })
-      .catch(err => {});
+      .catch(err => {
+        d3.select("svg").call((svg) => {
+          draw.updateCalculatedLocationMarker(svg, undefined, undefined);
+        })
+      });
   });
 };
 
