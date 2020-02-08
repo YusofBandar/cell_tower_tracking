@@ -1,4 +1,4 @@
-const baseUrl = "http://1994dc88.ngrok.io";
+const baseUrl = "https://1994dc88.ngrok.io";
 
 const getTowers = (lat, lng) => {
   return getRequest(`${baseUrl}/towers?lat=${lat}&lng=${lng}`);
