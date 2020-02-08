@@ -7,9 +7,7 @@ const db = require("./util/database");
 
 db.connect();
 
-app.use(cors({
-    origin: 'http://127.0.0.1:5500/'
-  }));
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.send("Cell Towers API");
@@ -36,5 +34,11 @@ app.get("/towers", async (req, res) => {
       res.status(500).end();
   }
 });
+
+app.get("/key", (req, res) => {
+  res.send(JSON.stringify({
+    key : ""
+  }));
+})
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

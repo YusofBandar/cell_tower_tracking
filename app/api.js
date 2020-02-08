@@ -9,7 +9,6 @@ const getGeoLocation = (apiKey, carrier, cellTowers) => {
     homeMobileCountryCode: carrier.mcc,
     homeMobileNetworkCode: carrier.mnc,
     considerIp: "false",
-    radioType: "gsm",
     cellTowers
   };
 
@@ -18,6 +17,10 @@ const getGeoLocation = (apiKey, carrier, cellTowers) => {
     body
   );
 };
+
+const getKey = () => {
+  return getRequest(`${baseUrl}/key`)
+}
 
 const getRequest = url => {
   return new Promise((resolve, reject) => {
@@ -61,5 +64,6 @@ const postRequest = (url, body) => {
 
 export default {
   getTowers,
-  getGeoLocation
+  getGeoLocation,
+  getKey
 };

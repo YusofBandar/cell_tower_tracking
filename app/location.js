@@ -1,6 +1,11 @@
 import api from "./api.js";
 import conversion from "./conversions.js";
-import key from "./key.js";
+
+let key = "";
+
+api.getKey().then(result => {
+  key = result.key;
+});
 
 const getLocation = () => {
   return new Promise((resolve, reject) => {
@@ -29,7 +34,6 @@ const watchLocation = () => {
 };
 
 const getCalculatedLocation = (cellTowers, selectedProvider, currentCoords) => {
- 
   let connectedTowers = cellTowers
     .filter(d =>
       selectedProvider.net.indexOf(Number(d.net)) < 0 ? false : true
@@ -54,9 +58,22 @@ const getCalculatedLocation = (cellTowers, selectedProvider, currentCoords) => {
         distance: d.distance
       };
     });
-  const topN = parseInt(connectedTowers.length * (30/100));
-  
-  return api.getGeoLocation(key.key(), selectedProvider, connectedTowers.slice(0, topN));
+  const topN = parseInt(connectedTowers.length * (30 / 100));
+  if (key === "") {
+    return api.getKey().then(result => {
+      return api.getGeoLocation(
+        result.key,
+        selectedProvider,
+        connectedTowers.slice(0, topN)
+      );
+    });
+  }
+
+  return api.getGeoLocation(
+    key,
+    selectedProvider,
+    connectedTowers.slice(0, topN)
+  );
 };
 
 export default {
