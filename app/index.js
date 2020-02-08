@@ -10,7 +10,7 @@ const providers = [
   { provider: "Vodaphone", net: [7, 15, 91, 92], mcc: 23415, mnc: 23415 }
 ];
 
-window.onload = () => {
+const load = () => {
   let map;
   let selectedProvider = providers[1];
   let accuracy = undefined;
@@ -153,4 +153,16 @@ const initMap = (center, zoom = 14) => {
     disableDefaultUI: true,
     disableDoubleClickZoom: false
   });
-};
+}
+
+(function dynamicallyLoadScript(loadFunc) {
+  var script = document.createElement("script");
+  api.getKey().then(result => {
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${result.key}`;  
+    document.head.appendChild(script);
+    script.onreadystatechange= function () {
+      if (this.readyState == 'complete') loadFunc();
+   }  
+   script.onload= loadFunc;
+  })  
+})(load)
