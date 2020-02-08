@@ -5,7 +5,7 @@ import location from "./location.js";
 import mapStyling from "./mapStyling.js";
 
 const providers = [
-  { provider: "BT", net: [0, 76, 77], mcc: 23430, mnc: 23430 },
+  { provider: "BT", net: [0, 76, 77], mcc: 23420, mnc: 23420 },
   { provider: "O2", net: [2, 10, 11], mcc: 23410, mnc: 23410 },
   { provider: "Vodaphone", net: [7, 15, 91, 92], mcc: 23415, mnc: 23415 }
 ];
