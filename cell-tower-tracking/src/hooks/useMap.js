@@ -1,23 +1,23 @@
 import {useRef, useState, useEffect} from 'react';
 import MapStyles from './mapStyles';
 
-function useMap(element) {
+function useMap(element, center) {
     const [isLoading, setLoading] = useState(true);
     const map = useRef();
 
     useEffect(() => {
-        if(element.current){
+        if(element.current && center){
             map.current = new window.google.maps.Map(element.current, {
-                center: { lat: -34.397, lng: 150.644 },
-                zoom: 8,
+                zoom: 12,
                 styles: MapStyles,
                 disableDefaultUI: true,
-                disableDoubleClickZoom: false
+                disableDoubleClickZoom: false,
+                center
             });
 
             setLoading(false);
         }
-    }, [element]);
+    }, [element, center]);
 
     return [isLoading, map.current];
 }
