@@ -1,0 +1,8 @@
+.tower {
+    fill: rgb(153, 241, 55);
+    opacity: 0.1;
+
+    &.connected {
+        opacity: 0.7;
+    }
+}
