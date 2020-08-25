@@ -1,0 +1,29 @@
+.location {
+    opacity: 0.8;
+    fill: rgb(255,255,255);
+    stroke: rgb(255,255,255);
+}
+
+.blip {
+    stroke-width: 0px;
+    stroke-opacity: 1;
+    animation-duration: 8s;
+    animation-delay: 3s;
+    animation-name: blip;
+    animation-iteration-count: infinite;
+}
+
+@keyframes blip {
+    0% {
+        stroke-width: 0px;
+        stroke-opacity: 1;
+    }
+    30%{
+        stroke-width: 30px;
+        stroke-opacity: 0;
+    }
+    100%{
+        stroke-width: px;
+        stroke-opacity: 0;
+    }
+}
