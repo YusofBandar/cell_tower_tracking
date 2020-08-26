@@ -1,7 +1,7 @@
 import {useRef, useState, useEffect} from 'react';
 import MapStyles from './mapStyles';
 
-function useMap(element, center, onLocationChange = () => {}) {
+function useMap(element, lat, lng, onLocationChange = () => {}) {
     const [isLoading, setLoading] = useState(true);
     const map = useRef();
     const overlay = useRef();
@@ -11,14 +11,14 @@ function useMap(element, center, onLocationChange = () => {}) {
     }
 
     useEffect(() => {
-        if(element.current && center){
+        if(element.current && lat && lng){
             if(!map.current){
                 map.current = new window.google.maps.Map(element.current, {
                     zoom: 12,
                     styles: MapStyles,
                     disableDefaultUI: true,
                     disableDoubleClickZoom: false,
-                    center
+                    center: { lat, lng }
                 });
             }
 
@@ -28,18 +28,21 @@ function useMap(element, center, onLocationChange = () => {}) {
             }
             setLoading(false);
         }
-    }, [element, center]);
+    }, [element, lat, lng]);
+
+    useEffect(() => {
+        map.current && map.current.setCenter({ lat, lng });
+    }, [lat, lng]);
 
     useEffect(() => {
         if(overlay.current) {
-            const { lat, lng } = center;
             const factory = {
                 pixelCoords: () => coordsToPixel(overlay.current, LatLng(lat, lng))
             }
 
-            overlay.current.draw = () => onLocationChange(center, factory)
+            overlay.current.draw = () => onLocationChange({ lat, lng }, factory)
         }
-    }, [center, onLocationChange])
+    }, [lat, lng, onLocationChange])
 
     return [isLoading, map.current];
 }

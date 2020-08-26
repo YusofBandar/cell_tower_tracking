@@ -14,9 +14,10 @@ function App() {
     const [locationPixelCoords, setLocationPixelCoords] = useState(null);
 
     const [{ coords }] = useLocation();
-    const location = coords ? { lat: coords.latitude, lng: coords.longitude } : null;
+    const lat = coords ? coords.latitude : null;
+    const lng = coords ? coords.longitude : null;
 
-    const [isLoading, map] = useMap(element, location, (_, factory) => {
+    const [isLoading, map] = useMap(element, lat, lng, (_, factory) => {
         const pixels = factory.pixelCoords();
         setLocationPixelCoords(pixels);
     });
