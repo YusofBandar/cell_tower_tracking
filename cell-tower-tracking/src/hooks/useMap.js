@@ -37,10 +37,10 @@ function useMap(element, lat, lng, onLocationChange = () => {}) {
     useEffect(() => {
         if(overlay.current) {
             const factory = {
-                pixelCoords: () => coordsToPixel(overlay.current, LatLng(lat, lng))
+                pixelCoords: (lat, lng) => coordsToPixel(overlay.current, LatLng(lat, lng))
             }
 
-            overlay.current.draw = () => onLocationChange({ lat, lng }, factory)
+            overlay.current.draw = () => onLocationChange(lat, lng, factory)
         }
     }, [lat, lng, onLocationChange])
 
