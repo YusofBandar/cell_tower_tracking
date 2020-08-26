@@ -10,6 +10,7 @@ function useMap(element, lat, lng, onLocationChange = () => {}) {
         return new window.google.maps.LatLng(lat, lng);
     }
 
+    // init map and overlay objects
     useEffect(() => {
         if(element.current && lat && lng){
             if(!map.current){
@@ -30,10 +31,12 @@ function useMap(element, lat, lng, onLocationChange = () => {}) {
         }
     }, [element, lat, lng]);
 
+    // re-draw map at new location
     useEffect(() => {
         map.current && map.current.setCenter({ lat, lng });
     }, [lat, lng]);
 
+    // init location factory with useful locations
     useEffect(() => {
         if(overlay.current) {
             const factory = {
