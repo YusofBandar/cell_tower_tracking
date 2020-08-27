@@ -11,7 +11,6 @@ function Placeholder({ loading }) {
 
     useEffect(() => {
         setTimeout(() => {
-            console.log('fading');
             setFade(!loading);
         }, 800);
     }, [loading]);
