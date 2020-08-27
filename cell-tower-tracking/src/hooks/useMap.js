@@ -3,10 +3,11 @@ import apiKey from '../apiKey'
 
 import MapStyles from './mapStyles';
 
-function useMap(element, lat, lng, onLocationChange = () => {}) {
+function useMap(element, location, onLocationChange = () => {}) {
     const [isLoading, setLoading] = useState(true);
     const map = useRef();
     const overlay = useRef();
+    const { lat, lng } = location;
 
     const LatLng = (lat, lng) => {
         return new window.google.maps.LatLng(lat, lng);
@@ -14,7 +15,7 @@ function useMap(element, lat, lng, onLocationChange = () => {}) {
 
     // init map and overlay objects
     useEffect(() => {
-        if(element.current && lat && lng){
+        if(element.current && lat !== undefined && lng !== undefined){
             if(!map.current){
                 map.current = new window.google.maps.Map(element.current, {
                     zoom: 15,
@@ -66,7 +67,6 @@ function useCalculatedLocation(mcc, mnc, cellTowers) {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        console.log('FIRING');
         setIsLoading(true);
         const url = `https://www.googleapis.com/geolocation/v1/geolocate?key=${apiKey}`;
         const body = {
@@ -79,7 +79,6 @@ function useCalculatedLocation(mcc, mnc, cellTowers) {
         async function fetchData() {
             const response = await fetch(url, { method: 'post', body: JSON.stringify(body) });
             const json = await response.json();
-            console.log(json);
             setData(json);
             setIsLoading(false);
         }

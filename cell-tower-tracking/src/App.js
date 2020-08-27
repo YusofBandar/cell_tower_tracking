@@ -65,10 +65,9 @@ function App() {
 
     const [isLoadingCalc, calcLocation] = useCalculatedLocation(310, 120, cellTowers);
     const [{ coords }] = useLocation();
-    const lat = coords ? coords.latitude : null;
-    const lng = coords ? coords.longitude : null;
+    const location = coords ? { lat: coords.latitude, lng: coords.longitude } : {};
 
-    const [isLoading] = useMap(element, lat, lng, (lat, lng, factory) => {
+    const [isLoading] = useMap(element, location, (lat, lng, factory) => {
         const pixels = factory.pixelCoords(lat, lng);
         setLocationPixelCoords(pixels);
 
