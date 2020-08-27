@@ -1,4 +1,6 @@
 import {useRef, useState, useEffect} from 'react';
+import apiKey from '../apiKey'
+
 import MapStyles from './mapStyles';
 
 function useMap(element, lat, lng, onLocationChange = () => {}) {
@@ -15,7 +17,7 @@ function useMap(element, lat, lng, onLocationChange = () => {}) {
         if(element.current && lat && lng){
             if(!map.current){
                 map.current = new window.google.maps.Map(element.current, {
-                    zoom: 12,
+                    zoom: 15,
                     styles: MapStyles,
                     disableDefaultUI: true,
                     disableDoubleClickZoom: false,
@@ -55,4 +57,40 @@ function coordsToPixel (overlay, coords) {
     return projection ? projection.fromLatLngToContainerPixel(coords) : {};
 };
 
-export default useMap;
+
+
+
+// testing getting calculated position
+function useCalculatedLocation(mcc, mnc, cellTowers) {
+    const [data, setData] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        console.log('FIRING');
+        setIsLoading(true);
+        const url = `https://www.googleapis.com/geolocation/v1/geolocate?key=${apiKey}`;
+        const body = {
+            homeMobileCountryCode: mcc,
+            homeMobileNetworkCode: mnc,
+            considerIp: "false",
+            cellTowers
+        };
+
+        async function fetchData() {
+            const response = await fetch(url, { method: 'post', body: JSON.stringify(body) });
+            const json = await response.json();
+            console.log(json);
+            setData(json);
+            setIsLoading(false);
+        }
+
+        fetchData();
+    }, [mcc, mnc, cellTowers])
+
+    return [isLoading, data];
+};
+
+export {
+    useMap,
+    useCalculatedLocation
+};
