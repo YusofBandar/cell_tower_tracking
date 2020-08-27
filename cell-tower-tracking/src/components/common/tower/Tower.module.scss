@@ -1,8 +1,24 @@
 .tower {
     fill: rgb(153, 241, 55);
     opacity: 0.1;
+    animation-duration: 0.3s;
+    animation-delay: 3s;
+    animation-name: scaleIn;
+    animation-fill-mode: forwards;
+    //animation-timing-function: cubic-bezier(0.18, 0.89, 0, 3.16);
+    animation-timing-function: cubic-bezier(0, 2.01, 0, 1.9);
 
     &.connected {
         opacity: 0.7;
+    }
+}
+
+
+@keyframes scaleIn {
+    from {
+        r: 0;
+    }
+    to {
+        r: 7;
     }
 }

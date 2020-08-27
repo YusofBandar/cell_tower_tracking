@@ -8,8 +8,7 @@ function Tower({ x, y, connected }) {
         <circle 
             className={`${styles.tower} ${connected ? styles.connected : ''}`} 
             cx={x} 
-            cy={y} 
-            r={7}/>
+            cy={y}/>
     );
 }
 
