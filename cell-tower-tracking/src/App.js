@@ -7,9 +7,10 @@ import useLocation from './hooks/useLocation';
 
 import Location from './components/common/location/Location';
 import Tower from './components/common/tower/Tower';
+import Placeholder from './components/ui/placeholder/Placeholder';
 
 const cellTowers = [
-    { lat: 37.874929, lng: -122.419416, connected: false}, 
+    { lat: 37.874929, lng: -122.419416, connected: true}, 
     { lat: 37.774929, lng: -122.45942, connected: true}];
 
 function App() {
@@ -34,7 +35,7 @@ function App() {
 
     return (
         <div className={ styles.mapWrapper }>
-            { isLoading && <h1>Loading Map...</h1> }
+            <Placeholder loading={ isLoading }/>
             <div className={ styles.map } ref={ element }></div>
             <svg className={ styles.overlay }>
                 { locationPixelCoords && 
