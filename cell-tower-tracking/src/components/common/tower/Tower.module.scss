@@ -5,7 +5,6 @@
     animation-delay: 3s;
     animation-name: scaleIn;
     animation-fill-mode: forwards;
-    //animation-timing-function: cubic-bezier(0.18, 0.89, 0, 3.16);
     animation-timing-function: cubic-bezier(0, 2.01, 0, 1.9);
 
     &.connected {
