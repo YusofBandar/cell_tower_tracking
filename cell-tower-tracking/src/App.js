@@ -67,7 +67,8 @@ function App() {
     const [{ coords }] = useLocation();
     const location = coords ? { lat: coords.latitude, lng: coords.longitude } : {};
 
-    const [isLoading] = useMap(element, location, (lat, lng, factory) => {
+    const [isLoading, factory] = useMap(element, location, () => {
+        const { lat, lng } = location;
         const pixels = factory.pixelCoords(lat, lng);
         setLocationPixelCoords(pixels);
 
@@ -81,7 +82,7 @@ function App() {
             { ...tower, ...factory.pixelCoords(tower.Latitude,tower.Longitude) }
         ));
         setTowerPixelCoords(towerPixels);
-    });
+    }, [isLoadingCalc]);
 
     return (
         <div className={ styles.mapWrapper }>

@@ -1,13 +1,36 @@
-import {useRef, useState, useEffect} from 'react';
+import { useState, useEffect, useReducer } from 'react';
 import apiKey from '../apiKey'
 
 import MapStyles from './mapStyles';
 
-function useMap(element, location, onLocationChange = () => {}) {
+function mapReducer(state, action) {
+    if(action.type === 'draw'){
+        const { lat, lng, element } = action;
+        let { map, overlay } = state;
+        
+        if(!map){
+            map = new window.google.maps.Map(element.current, {
+                zoom: 15,
+                styles: MapStyles,
+                disableDefaultUI: true,
+                disableDoubleClickZoom: false,
+                center: { lat, lng }
+            });
+        }
+
+        if(!overlay){
+            overlay = new window.google.maps.OverlayView();
+            overlay.setMap(map);
+        }
+        map.setCenter({ lat, lng });
+        return { map, overlay, lat, lng }
+    }
+}
+
+function useMap(element, location, onLocationChange = () => {}, deps) {
     const [isLoading, setLoading] = useState(true);
-    const map = useRef();
-    const overlay = useRef();
     const { lat, lng } = location;
+    const [state, dispatch] = useReducer(mapReducer, {});
 
     const LatLng = (lat, lng) => {
         return new window.google.maps.LatLng(lat, lng);
@@ -16,49 +39,39 @@ function useMap(element, location, onLocationChange = () => {}) {
     // init map and overlay objects
     useEffect(() => {
         if(element.current && lat !== undefined && lng !== undefined){
-            if(!map.current){
-                map.current = new window.google.maps.Map(element.current, {
-                    zoom: 15,
-                    styles: MapStyles,
-                    disableDefaultUI: true,
-                    disableDoubleClickZoom: false,
-                    center: { lat, lng }
-                });
-            }
-
-            if(!overlay.current){
-                overlay.current = new window.google.maps.OverlayView();
-                overlay.current.setMap(map.current);
-            }
+            dispatch({ type: 'draw', lat, lng, element });
             setLoading(false);
         }
     }, [element, lat, lng]);
 
-    // re-draw map at new location
+    // assign location callback
     useEffect(() => {
-        map.current && map.current.setCenter({ lat, lng });
-    }, [lat, lng]);
-
-    // init location factory with useful locations
-    useEffect(() => {
-        if(overlay.current) {
-            const factory = {
-                pixelCoords: (lat, lng) => coordsToPixel(overlay.current, LatLng(lat, lng))
-            }
-
-            overlay.current.draw = () => onLocationChange(lat, lng, factory)
+        if(state.overlay && state.map){
+            state.overlay.draw = onLocationChange;
+            window.google.maps.event.addListener(state.map, 'draw', () => {
+                onLocationChange();
+            });
         }
-    }, [lat, lng, onLocationChange])
+    }, [state, onLocationChange])
 
-    return [isLoading, map.current];
+    // force a redraw when deps change
+    useEffect(() => {
+        window.google.maps.event.trigger(state.map, 'draw');
+    },[...deps]) // eslint-disable-line
+
+    const factory = {
+        pixelCoords: (lat, lng) => {
+            return coordsToPixel(state.overlay, LatLng(lat, lng));
+        }
+    }
+
+    return [isLoading, factory]
 }
 
 function coordsToPixel (overlay, coords) {
     const projection = overlay.getProjection();
     return projection ? projection.fromLatLngToContainerPixel(coords) : {};
 };
-
-
 
 
 // testing getting calculated position
