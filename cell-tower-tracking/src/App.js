@@ -4,8 +4,11 @@ import styles from './App.module.scss';
 
 import { useMap, useCalculatedLocation } from './hooks/useMap';
 import useLocation from './hooks/useLocation';
+import { conversion } from './util';
+
 
 import Location from './components/common/location/Location';
+import Accuracy from './components/common/accuracy/Accuracy';
 import Tower from './components/common/tower/Tower';
 import Placeholder from './components/ui/placeholder/Placeholder';
 
@@ -73,9 +76,12 @@ function App() {
         setLocationPixelCoords(pixels);
 
         if(!isLoadingCalc){
-            const { location } = calcLocation;
+            const { location, accuracy } = calcLocation;
             const calPixels = factory.pixelCoords(location.lat, location.lng);
-            setcalLocationPixelCoords(calPixels);
+            const accPixels = factory.pixelCoords(
+               ...conversion.offsetCoordsMetres(location.lat, location.lng, accuracy, 0));
+
+            setcalLocationPixelCoords({ location: calPixels, accuracy: calPixels.y - accPixels.y});
         }
 
         const towerPixels = cellTowers.map((tower) => (
@@ -95,7 +101,11 @@ function App() {
                     <Tower x={x} y={y} connected={ connected }/>
                 ))}
                 { calLocationPixelCoords && 
-                    <Location x={calLocationPixelCoords.x} y={calLocationPixelCoords.y}/>
+                    <Accuracy 
+                        x={calLocationPixelCoords.location.x} 
+                        y={calLocationPixelCoords.location.y} 
+                        radius={calLocationPixelCoords.accuracy}
+                    />
                 }
             </svg>
         </div>

@@ -74,7 +74,6 @@ function coordsToPixel (overlay, coords) {
 };
 
 
-// testing getting calculated position
 function useCalculatedLocation(mcc, mnc, cellTowers) {
     const [data, setData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
