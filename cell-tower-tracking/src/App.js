@@ -6,11 +6,11 @@ import { useMap, useCalculatedLocation } from './hooks/useMap';
 import useLocation from './hooks/useLocation';
 import { conversion } from './util';
 
-
 import Location from './components/common/location/Location';
 import Accuracy from './components/common/accuracy/Accuracy';
 import Tower from './components/common/tower/Tower';
 import Placeholder from './components/ui/placeholder/Placeholder';
+import LoadingSpinner from './components/common/loading-spinner/LoadingSpinner';
 
 const cellTowers = [
     {
@@ -56,6 +56,28 @@ const cellTowers = [
         Longitude: -122.424903,
         Range: 1000,
         connected: true
+    },
+    {
+        mobileCountryCode: 310,
+        mobileNetworkCode: 260,
+        locationAreaCode: 40482,
+        cellId: 157590765,
+        RadioType: 'UMTS',
+        Latitude: 37.77988,
+        Longitude: -122.41427,
+        Range: 3077,
+        connected: true
+    },
+    {
+        mobileCountryCode: 311,
+        mobileNetworkCode: 480,
+        locationAreaCode: 9730,
+        cellId: 163335458,
+        RadioType: 'LTE',
+        Latitude: 37.777176,
+        Longitude: -122.417487,
+        Range: 1000,
+        connected: true
     }
 ]
 
@@ -92,8 +114,13 @@ function App() {
 
     return (
         <div className={ styles.mapWrapper }>
-            <Placeholder loading={ isLoading }/>
+            <div className={`${styles.placeholder} ${!isLoading ? styles.hide : ''}`}>
+                <Placeholder>
+                    { isLoading && <LoadingSpinner /> }
+                </Placeholder>
+            </div>
             <div className={ styles.map } ref={ element }></div>
+            { !isLoading && 
             <svg className={ styles.overlay }>
                 { locationPixelCoords && 
                 <Location x={locationPixelCoords.x} y={locationPixelCoords.y}/>}
@@ -108,11 +135,9 @@ function App() {
                     />
                 }
             </svg>
+            }
         </div>
     );
 }
-
-
-
 
 export default App;

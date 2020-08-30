@@ -1,6 +1,5 @@
 .placeholder {
-    z-index: 100;
-    position: absolute;
+    position: relative;
     width: 100%;
     height: 100%;
 
@@ -18,14 +17,6 @@
         display: flex;
         justify-content: flex-end;
         align-items: center;
-    }
-
-    &.hide {
-        transition: all 2s 0.2s;
-        opacity: 0;
-        filter: blur(0px);
-        visibility: hidden;
-        pointer-events: none;
     }
 }
 

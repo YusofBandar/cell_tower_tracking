@@ -1,28 +1,17 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 
 import styles from './Placeholder.module.scss';
 
 import Map from '../../../img/map_placeholder.PNG';
-import LoadingSpinner from '../../common/loading-spinner/LoadingSpinner';
 
 
-function Placeholder({ loading }) {
-    const [fade, setFade] = useState(false);
-
-    useEffect(() => {
-        setTimeout(() => {
-            setFade(!loading);
-        }, 800);
-    }, [loading]);
-
+function Placeholder({ children }) {
     return (
-        <div className={`${styles.placeholder} ${ fade ? styles.hide : ''}`}>
+        <div className={ styles.placeholder }>
             <img className={ styles.map } src={ Map } alt='placeholder map'/>
-            { !fade && 
             <div className={ styles.overlay }>
-                <LoadingSpinner />
+                { children } 
             </div>
-            }
         </div>
     );
 }
