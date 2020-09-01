@@ -35,10 +35,4 @@ app.get("/towers", async (req, res) => {
   }
 });
 
-app.get("/key", (req, res) => {
-  res.send(JSON.stringify({
-    key : ""
-  }));
-})
-
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
