@@ -2,8 +2,10 @@ import React, { useState, useRef } from 'react';
 
 import styles from './App.module.scss';
 
-import { useMap, useCalculatedLocation } from './hooks/useMap';
+import useMap from './hooks/useMap';
+import useFetch from './hooks/useFetch';
 import useLocation from './hooks/useLocation';
+import { CalculatedLocation } from './API';
 import { conversion } from './util';
 
 import Location from './components/common/location/Location';
@@ -88,7 +90,7 @@ function App() {
     const [calLocationPixelCoords, setcalLocationPixelCoords] = useState(null);
     const [towerPixelCoords, setTowerPixelCoords] = useState([]);
 
-    const [isLoadingCalc, calcLocation] = useCalculatedLocation(310, 120, cellTowers);
+    const [isLoadingCalc, calcLocation] = useFetch(() => CalculatedLocation(310, 120, cellTowers), [])
     const [{ coords }] = useLocation();
     const location = coords ? { lat: coords.latitude, lng: coords.longitude } : {};
 
