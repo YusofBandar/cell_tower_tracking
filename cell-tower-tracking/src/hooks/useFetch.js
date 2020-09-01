@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
-function useFetch(action, deps) {
-    const [data, setData] = useState();
+function useFetch(action, initial, deps) {
+    const [data, setData] = useState(initial);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {

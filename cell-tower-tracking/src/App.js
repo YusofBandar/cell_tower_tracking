@@ -90,7 +90,7 @@ function App() {
     const [calLocationPixelCoords, setcalLocationPixelCoords] = useState(null);
     const [towerPixelCoords, setTowerPixelCoords] = useState([]);
 
-    const [isLoadingCalc, calcLocation] = useFetch(() => CalculatedLocation(310, 120, cellTowers), [])
+    const [isLoadingCalc, calcLocation] = useFetch(() => CalculatedLocation(310, 120, cellTowers), [], [])
     const [{ coords }] = useLocation();
     const location = coords ? { lat: coords.latitude, lng: coords.longitude } : {};
 
