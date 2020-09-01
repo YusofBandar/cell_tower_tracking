@@ -1,5 +1,4 @@
 import { useState, useEffect, useReducer } from 'react';
-import apiKey from '../apiKey'
 
 import MapStyles from './mapStyles';
 
@@ -73,35 +72,4 @@ function coordsToPixel (overlay, coords) {
     return projection ? projection.fromLatLngToContainerPixel(coords) : {};
 };
 
-
-function useCalculatedLocation(mcc, mnc, cellTowers) {
-    const [data, setData] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
-        setIsLoading(true);
-        const url = `https://www.googleapis.com/geolocation/v1/geolocate?key=${apiKey}`;
-        const body = {
-            homeMobileCountryCode: mcc,
-            homeMobileNetworkCode: mnc,
-            considerIp: "false",
-            cellTowers
-        };
-
-        async function fetchData() {
-            const response = await fetch(url, { method: 'post', body: JSON.stringify(body) });
-            const json = await response.json();
-            setData(json);
-            setIsLoading(false);
-        }
-
-        fetchData();
-    }, [mcc, mnc, cellTowers])
-
-    return [isLoading, data];
-};
-
-export {
-    useMap,
-    useCalculatedLocation
-};
+export default useMap;
