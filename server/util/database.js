@@ -2,6 +2,11 @@ const { Pool } = require("pg");
 const conversion = require("./conversions");
 let pool;
 
+process.env.USER === undefined && new Error('USER env variable not defined');
+process.env.HOST === undefined && new Error('HOST env variable not defined');
+process.env.DATABASE === undefined && new Error('DATABASE env variable not defined');
+process.env.PASSWORD === undefined && new Error('PASSWORD env variable not defined');
+
 const connect = () => {
     pool = new Pool({
         user: process.env.USER,
