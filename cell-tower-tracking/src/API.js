@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const API = axios.create({ baseURL: 'http://localhost:5501'});
 
-export const Towers = (lat, lng, range = 8000) => API.get(`towers?lat=${lat}&lng=${lng}&range=${range}`)
+export const Towers = (lat, lng, range = 200) => API.get(`towers?lat=${lat}&lng=${lng}&range=${range}`)
                                                         .then((response) => response.data)
                                                         .catch((error) => console.error(error));
 
