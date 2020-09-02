@@ -17,8 +17,8 @@ import LoadingSpinner from './components/common/loading-spinner/LoadingSpinner';
 function App() {
     const element = useRef();
 
-    const [locationPixelCoords, setLocationPixelCoords] = useState(null);
-    const [calLocationPixelCoords, setcalLocationPixelCoords] = useState(null);
+    const [locationPixelCoords, setLocationPixelCoords] = useState({});
+    const [calLocationPixelCoords, setcalLocationPixelCoords] = useState({});
     const [towerPixelCoords, setTowerPixelCoords] = useState([]);
 
     const [{ coords }] = useLocation();
@@ -57,12 +57,12 @@ function App() {
             <div className={ styles.map } ref={ element }></div>
             { !isLoading && 
             <svg className={ styles.overlay }>
-                { locationPixelCoords && 
+                { 'x' in locationPixelCoords && 
                 <Location x={locationPixelCoords.x} y={locationPixelCoords.y}/>}
-                { towerPixelCoords.map(({ x, y }) => (
+                { towerPixelCoords.length > 0 && towerPixelCoords.map(({ x, y }) => (
                     <Tower x={x} y={y} connected={ true }/>
                 ))}
-                { calLocationPixelCoords && 
+                { 'location' in calLocationPixelCoords && 
                     <Accuracy 
                         x={calLocationPixelCoords.location.x} 
                         y={calLocationPixelCoords.location.y} 
