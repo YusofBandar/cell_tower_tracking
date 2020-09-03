@@ -8,9 +8,7 @@ import useLocation from './hooks/useLocation';
 import { Towers, CalculatedLocation } from './API';
 import { conversion } from './util';
 
-import Location from './components/common/location/Location';
-import Accuracy from './components/common/accuracy/Accuracy';
-import Tower from './components/common/tower/Tower';
+import Overlay from './components/ui/overlay/Overlay';
 import Placeholder from './components/ui/placeholder/Placeholder';
 import LoadingSpinner from './components/common/loading-spinner/LoadingSpinner';
 
@@ -24,7 +22,7 @@ function App() {
     const [{ coords }] = useLocation();
     const location = coords ? { lat: coords.latitude, lng: coords.longitude } : {};
 
-    const [isLoadingTowers, cellTowers] = useFetch(() => Towers(location.lat, location.lng), [], [location.lat, location.lng]);
+    const [isLoadingTowers, cellTowers] = useFetch(() => Towers(location.lat, location.lng, 400), [], [location.lat, location.lng]);
     const [isLoadingCalc, calcLocation] = useFetch(() => cellTowers.length > 0 && CalculatedLocation(310, 120, formatCellTowers(cellTowers)), [], [cellTowers])
 
     const [isLoading, factory] = useMap(element, location, () => {
@@ -55,21 +53,11 @@ function App() {
                 </Placeholder>
             </div>
             <div className={ styles.map } ref={ element }></div>
-            { !isLoading && 
-            <svg className={ styles.overlay }>
-                { 'x' in locationPixelCoords && 
-                <Location x={locationPixelCoords.x} y={locationPixelCoords.y}/>}
-                { towerPixelCoords.length > 0 && towerPixelCoords.map(({ x, y }) => (
-                    <Tower x={x} y={y} connected={ true }/>
-                ))}
-                { 'location' in calLocationPixelCoords && 
-                    <Accuracy 
-                        x={calLocationPixelCoords.location.x} 
-                        y={calLocationPixelCoords.location.y} 
-                        radius={calLocationPixelCoords.accuracy}
-                    />
-                }
-            </svg>
+            { !isLoading && 'x' in locationPixelCoords && 'y' in locationPixelCoords &&
+            <Overlay 
+                location={ locationPixelCoords } 
+                calcLocation={ calLocationPixelCoords } 
+                towers={ towerPixelCoords }/>
             }
         </div>
     );
