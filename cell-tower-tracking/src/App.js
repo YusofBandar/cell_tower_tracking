@@ -1,29 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import useFetch from './hooks/useFetch';
 import useLocation from './hooks/useLocation';
 import { Towers, CalculatedLocation } from './API';
 
-// eslint-disable-next-line
 import styles from './App.module.scss';
 
 import Map from './components/ui/map/Map';
 import Placeholder from './components/ui/placeholder/Placeholder';
 import LoadingSpinner from './components/common/loading-spinner/LoadingSpinner';
+import Error from './components/common/error/Error';
 
 function App() {
-    const [isLoading, _, { coords }] = useLocation();
+    const [errorMessage, setErrorMessage] = useState('');
+    const [isLoading, error, { coords }] = useLocation();
     const location = coords ? { lat: coords.latitude, lng: coords.longitude } : {};
 
     const [isLoadingTowers, towers] = useFetch(() => Towers(location.lat, location.lng, 400), [], [location.lat, location.lng]);
     const [isLoadingCalc, calcLocation] = useFetch(() => towers.length > 0 && CalculatedLocation(310, 120, formatCellTowers(towers)), [], [towers])
 
+    useEffect(() => {
+        setErrorMessage('Failed to get location');
+    }, [error])
+
 
     return (
         <div className={ styles.mapWrapper }>
-            <div className={`${styles.placeholder} ${!isLoading ? styles.hide : ''}`}>
+            <div className={`${styles.placeholder} ${(!isLoading && !error) ? styles.hide : ''}`}>
                 <Placeholder>
-                    { isLoading && <LoadingSpinner /> }
+                    <span className={ styles.content }>
+                        { isLoading && <LoadingSpinner /> }
+                        { !isLoading && <Error>{ errorMessage }</Error> }
+                    </span>
                 </Placeholder>
             </div>
             { !isLoading &&
