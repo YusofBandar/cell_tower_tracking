@@ -1,0 +1,24 @@
+.mapWrapper {
+    width: 100%; 
+    height: 1000px;
+    position: relative;
+}
+
+.map {
+    height: 100%;
+    width: 100%;
+}
+
+.placeholder {
+    z-index: 10000;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    &.hide {
+        transition: all 2s 0.5s;
+        opacity: 0;
+        filter: blur(0px);
+        pointer-events: none;
+    }
+}
