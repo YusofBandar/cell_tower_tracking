@@ -8,17 +8,25 @@ import { Towers, CalculatedLocation } from './API';
 import styles from './App.module.scss';
 
 import Map from './components/ui/map/Map';
+import Placeholder from './components/ui/placeholder/Placeholder';
+import LoadingSpinner from './components/common/loading-spinner/LoadingSpinner';
 
 function App() {
-    const [{ coords }] = useLocation();
+    const [isLoading, _, { coords }] = useLocation();
     const location = coords ? { lat: coords.latitude, lng: coords.longitude } : {};
 
     const [isLoadingTowers, towers] = useFetch(() => Towers(location.lat, location.lng, 400), [], [location.lat, location.lng]);
     const [isLoadingCalc, calcLocation] = useFetch(() => towers.length > 0 && CalculatedLocation(310, 120, formatCellTowers(towers)), [], [towers])
 
+
     return (
-        <div>
-            { 'lat' in location && 'lng' in location &&
+        <div className={ styles.mapWrapper }>
+            <div className={`${styles.placeholder} ${!isLoading ? styles.hide : ''}`}>
+                <Placeholder>
+                    { isLoading && <LoadingSpinner /> }
+                </Placeholder>
+            </div>
+            { !isLoading &&
             <Map 
                 location={ location } 
                 calcLocation={ isLoadingCalc ? {} : calcLocation } 

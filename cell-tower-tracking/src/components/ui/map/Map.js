@@ -5,10 +5,7 @@ import useMap from '../../../hooks/useMap';
 
 import styles from './Map.module.scss';
 
-import Placeholder from '../placeholder/Placeholder';
-import LoadingSpinner from '../../common/loading-spinner/LoadingSpinner';
 import Overlay from '../overlay/Overlay';
-
 
 function Map({ location, calcLocation, towers,}) {
     const element = useRef();
@@ -43,11 +40,6 @@ function Map({ location, calcLocation, towers,}) {
 
     return(
         <div className={ styles.mapWrapper }>
-            <div className={`${styles.placeholder} ${!isLoading ? styles.hide : ''}`}>
-                <Placeholder>
-                    { isLoading && <LoadingSpinner /> }
-                </Placeholder>
-            </div>
             <div className={ styles.map } ref={ element }></div>
             { !isLoading && 'x' in locationPixelCoords && 'y' in locationPixelCoords &&
             <Overlay 
