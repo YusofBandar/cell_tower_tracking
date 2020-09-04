@@ -7,6 +7,7 @@ function useLocation() {
 
     const onLocationUpdate = (location) => {
         setLocation(location);
+        setError(null);
         setIsLoading(false);
     };
 
