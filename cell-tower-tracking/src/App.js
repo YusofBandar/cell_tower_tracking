@@ -18,11 +18,13 @@ function App() {
 
     const [isLoadingTowers, towers] = useFetch(() => Towers(location.lat, location.lng, 400), [], [location.lat, location.lng]);
     const [isLoadingCalc, calcLocation] = useFetch(() => towers.length > 0 && CalculatedLocation(310, 120, formatCellTowers(towers)), [], [towers])
+    
 
     useEffect(() => {
-        setErrorMessage('Failed to get location');
+        if(error){
+            setErrorMessage('Failed to get location');
+        }
     }, [error])
-
 
     return (
         <div className={ styles.mapWrapper }>
@@ -30,7 +32,7 @@ function App() {
                 <Placeholder>
                     <span className={ styles.content }>
                         { isLoading && <LoadingSpinner /> }
-                        { !isLoading && <Error>{ errorMessage }</Error> }
+                        { !isLoading && error && <Error>{ errorMessage }</Error> }
                     </span>
                 </Placeholder>
             </div>
