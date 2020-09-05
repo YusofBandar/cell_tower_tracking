@@ -21,7 +21,7 @@ function Map({ location, calcLocation, towers,}) {
             setLocationPixelCoords(pixels);
         }
 
-        if(calcLocation && 'location' in location && 'accuracy' in location){
+        if(calcLocation && 'location' in calcLocation && 'accuracy' in calcLocation){
             const { location, accuracy } = calcLocation;
             const calPixels = factory.pixelCoords(location.lat, location.lng);
             const accPixels = factory.pixelCoords(
