@@ -30,14 +30,7 @@ const getCellTowersInRange = async (lat, lng, range) => {
     }
 
     const result = await pool.query(query);
-    let cellTowers = [];
-    for(row of result.rows){
-        const distance = conversion.coordsDistanceMetres(lat, lng, row.lat, row.lon);
-        if(distance <= row.range){
-            cellTowers.push(row);
-        }
-    }
-    return cellTowers;
+    return result.rows;
 }
 
 exports.connect = connect;
