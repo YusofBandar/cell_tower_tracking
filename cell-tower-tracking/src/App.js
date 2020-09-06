@@ -10,16 +10,18 @@ import Map from './components/ui/map/Map';
 import Placeholder from './components/ui/placeholder/Placeholder';
 import LoadingSpinner from './components/common/loading-spinner/LoadingSpinner';
 import Error from './components/common/error/Error';
+import Toast from './components/common/toast/Toast';
 
 function App() {
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, error, { coords }] = useLocation();
     const location = coords ? { lat: coords.latitude, lng: coords.longitude } : {};
 
-    const [isLoadingTowers, towers] = useFetch(() => Towers(location.lat, location.lng, 400), [], [location.lat, location.lng]);
-    const [isLoadingCalc, calcLocation] = useFetch(() => towers.length > 0 && CalculatedLocation(310, 120, formatCellTowers(towers)), [], [towers])
+    const [isLoadingTowers, towers] = useFetch(
+        () => Towers(location.lat, location.lng, 400), [], [location.lat, location.lng]);
+    const [isLoadingCalc, calcLocation] = useFetch(
+        () => towers && towers.length > 0 && CalculatedLocation(310, 120, formatCellTowers(towers)), [], [towers])
     
-
     useEffect(() => {
         if(error){
             setErrorMessage('Failed to get location');
@@ -28,6 +30,8 @@ function App() {
 
     return (
         <div className={ styles.mapWrapper }>
+            { !isLoading && 
+            <Toast show={ !isLoadingTowers && (!towers || towers.length < 1) }>Failed to calculate location</Toast> }
             <div className={`${styles.placeholder} ${(!isLoading && !error) ? styles.hide : ''}`}>
                 <Placeholder>
                     <span className={ styles.content }>
