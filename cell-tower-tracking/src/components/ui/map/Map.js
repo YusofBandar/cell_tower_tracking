@@ -39,7 +39,7 @@ function Map({ location, calcLocation, towers,}) {
     }, [location, calcLocation, towers]);
 
     return(
-        <div className={ styles.mapWrapper }>
+        <div className={ styles.mapWrapper } style={{ height: window.innerHeight }}>
             <div className={ styles.map } ref={ element }></div>
             { !isLoading && 'x' in locationPixelCoords && 'y' in locationPixelCoords &&
             <Overlay 
