@@ -1,11 +1,13 @@
 import React, { useState, useRef } from 'react';
 
-import { conversion } from '../../../util';
+import { offsetCoordsMetres } from '../../../util/conversion';
 import useMap from '../../../hooks/useMap';
 
 import styles from './Map.module.scss';
 
 import Overlay from '../overlay/Overlay';
+
+console.log(offsetCoordsMetres);
 
 function Map({ location, calcLocation, towers,}) {
     const element = useRef();
@@ -25,7 +27,7 @@ function Map({ location, calcLocation, towers,}) {
             const { location, accuracy } = calcLocation;
             const calPixels = factory.pixelCoords(location.lat, location.lng);
             const accPixels = factory.pixelCoords(
-               ...conversion.offsetCoordsMetres(location.lat, location.lng, accuracy, 0));
+               ...offsetCoordsMetres(location.lat, location.lng, accuracy, 0));
 
             setcalLocationPixelCoords({ location: calPixels, accuracy: calPixels.y - accPixels.y});
         }
