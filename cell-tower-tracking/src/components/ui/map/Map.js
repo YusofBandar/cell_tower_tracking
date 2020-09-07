@@ -7,8 +7,6 @@ import styles from './Map.module.scss';
 
 import Overlay from '../overlay/Overlay';
 
-console.log(offsetCoordsMetres);
-
 function Map({ location, calcLocation, towers,}) {
     const element = useRef();
 
