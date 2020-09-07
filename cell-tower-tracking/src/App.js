@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import useFetch from './hooks/useFetch';
 import useLocation from './hooks/useLocation';
 import { Towers, CalculatedLocation } from './API';
+import { coordsDistanceMetres } from './util/conversion';
 
 import styles from './App.module.scss';
 
@@ -17,11 +18,8 @@ function App() {
     const [isLoading, error, { coords }] = useLocation();
     const location = coords ? { lat: coords.latitude, lng: coords.longitude } : {};
 
-    const [isLoadingTowers, towers] = useFetch(
-        () => Towers(location.lat, location.lng, 400), [], [location.lat, location.lng]);
-    const [isLoadingCalc, calcLocation] = useFetch(
-        () => towers && towers.length > 0 && CalculatedLocation(310, 120, formatCellTowers(towers)), [], [towers])
-    
+    const [isLoadingTowers, towers, calcLocation] = useCalculatedLocation(location);
+
     useEffect(() => {
         if(error){
             setErrorMessage('Failed to get location');
@@ -43,11 +41,64 @@ function App() {
             { !isLoading &&
             <Map 
                 location={ location } 
-                calcLocation={ isLoadingCalc ? {} : calcLocation } 
+                calcLocation={ isLoadingTowers ? {} : calcLocation } 
                 towers={ isLoadingTowers ? [] : towers }/>
             }
         </div>
     );
+}
+
+function useCalculatedLocation(location){
+    const [isLoading, setIsLoading] = useState(true);
+    const [towers, setTowers] = useState();
+    const [calcLocation, setCalcLocation] = useState();
+
+    useEffect( () => {
+        const fetchCalcLocation = async () => {
+            if(location.lat !== undefined && location.lng !== undefined){
+                setIsLoading(true);
+
+                const ranges = [100, 200, 300, 500, 800];
+                const distancePromises = ranges.map(async (range) => {
+                    const towersResponse = await Towers(location.lat, location.lng, range);
+                    const locationResponse = await CalculatedLocation(310, 120, formatCellTowers(towersResponse));
+
+                    if(!locationResponse){
+                        return {};
+                    }
+
+                    const distance = coordsDistanceMetres(
+                        location.lat,
+                        location.lng,
+                        locationResponse.location.lat,
+                        locationResponse.location.lng);
+
+                    return { towers: towersResponse, location: locationResponse, distance};
+                });
+
+                let minDistance = 999999
+                let minIndex = 0;
+                const distances = await Promise.all(distancePromises);
+                distances.filter(distance => 'location' in distance)
+                    .forEach((distance, i) => {
+                        if(distance < minDistance){
+                            minDistance = distance;
+                            minIndex = i;
+                        }
+                });
+
+                const minLocation = distances[minIndex];
+                setTowers(minLocation.towers);
+                setCalcLocation(minLocation.location);
+
+                setIsLoading(false);
+            }
+        }
+
+        fetchCalcLocation();
+    }, [location.lat, location.lng]);
+
+    return [isLoading, towers, calcLocation];
 }
 
 function formatCellTowers(towers){
