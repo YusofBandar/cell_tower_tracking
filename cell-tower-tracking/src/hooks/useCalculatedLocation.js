@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { Towers, CalculatedLocation } from '../API';
+import { Towers, CalculatedLocation } from '../api';
 import { coordsDistanceMetres } from '../util/conversion';
 
 function useCalculatedLocation(location){
