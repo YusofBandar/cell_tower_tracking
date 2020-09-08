@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-import useFetch from './hooks/useFetch';
 import useLocation from './hooks/useLocation';
 import { Towers, CalculatedLocation } from './API';
 import { coordsDistanceMetres } from './util/conversion';
@@ -60,8 +59,16 @@ function useCalculatedLocation(location){
 
                 const ranges = [100, 200, 300, 500, 800];
                 const distancePromises = ranges.map(async (range) => {
-                    const towersResponse = await Towers(location.lat, location.lng, range);
-                    const locationResponse = await CalculatedLocation(310, 120, formatCellTowers(towersResponse));
+                    let towersResponse, locationResponse;
+
+                    try{
+                        towersResponse = await Towers(location.lat, location.lng, range);
+                        if(towersResponse.length > 0){
+                            locationResponse = await CalculatedLocation(310, 120, formatCellTowers(towersResponse));
+                        }
+                    }catch(error) {
+                        return {};
+                    }
 
                     if(!locationResponse){
                         return {};
