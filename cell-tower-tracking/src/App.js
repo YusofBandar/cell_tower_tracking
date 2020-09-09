@@ -26,12 +26,15 @@ function App() {
 
     useEffect(() => {
         if(!isLoadingAllTowers && !isLoadingCalc){
-            const unConnected = allTowers
-                .filter(({ id }) => !connectedTowers.find(t => t.id === id)) // filter out connected towers
-                .map(t => ({ ...t, connected: false}));
-            const connected = connectedTowers.map(t => ({ ...t, connected: true}));
 
-            setTowers([...connected, ...unConnected]);
+            if(connectedTowers.length > 0 && allTowers.length > 0){
+                const unConnected = allTowers
+                    .filter(({ id }) => !connectedTowers.find(t => t.id === id)) // filter out connected towers
+                    .map(t => ({ ...t, connected: false}));
+                const connected = connectedTowers.map(t => ({ ...t, connected: true}));
+
+                setTowers([...connected, ...unConnected]);
+            }
             setIsLoadingTowers(false);
         }
 
