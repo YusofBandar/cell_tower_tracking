@@ -14,7 +14,7 @@ function useFetch(action, initial, deps) {
         }
 
         fetchData();
-    }, [...deps]) // eslint-disable-line
+    }, deps) // eslint-disable-line
 
     return[isLoading, data]
 }

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { Towers } from './api';
 
 import useLocation from './hooks/useLocation';
 import useCalculatedLocation from './hooks/useCalculatedLocation';
+import useFetch from './hooks/useFetch';
 
 import styles from './App.module.scss';
 
@@ -12,11 +14,28 @@ import Error from './components/common/error/Error';
 import Toast from './components/common/toast/Toast';
 
 function App() {
+    const [towers, setTowers] = useState([]);
+    const [isLoadingTowers, setIsLoadingTowers] = useState(true);
+
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, error, { coords }] = useLocation();
     const location = coords ? { lat: coords.latitude, lng: coords.longitude } : {};
 
-    const [isLoadingTowers, towers, calcLocation] = useCalculatedLocation(location);
+    const [isLoadingCalc, connectedTowers, calcLocation] = useCalculatedLocation(location);
+    const [isLoadingAllTowers, allTowers] = useFetch(() => Towers(location.lat, location.lng, 800), [], [isLoadingCalc]);
+
+    useEffect(() => {
+        if(!isLoadingAllTowers && !isLoadingCalc){
+            const unConnected = allTowers
+                .filter(({ id }) => !connectedTowers.find(t => t.id === id)) // filter out connected towers
+                .map(t => ({ ...t, connected: false}));
+            const connected = connectedTowers.map(t => ({ ...t, connected: true}));
+
+            setTowers([...connected, ...unConnected]);
+            setIsLoadingTowers(false);
+        }
+
+    }, [isLoadingAllTowers, isLoadingCalc, connectedTowers, allTowers])
 
     useEffect(() => {
         if(error){

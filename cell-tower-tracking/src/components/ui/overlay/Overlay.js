@@ -12,8 +12,8 @@ function Overlay({ location, calcLocation, towers}) {
         <svg className={ styles.overlay }>
             { 'x' in location && 'y' in location && 
             <Location x={location.x} y={location.y}/>}
-            { towers.length > 0 && towers.map(({ x, y }, i) => (
-                <Tower key={i} x={x} y={y} connected={ true }/>
+            { towers.length > 0 && towers.map(({ x, y, connected }, i) => (
+                <Tower key={i} x={x} y={y} connected={ connected }/>
             ))}
             { calcLocation && 'location' in calcLocation && 
                 <Accuracy 
