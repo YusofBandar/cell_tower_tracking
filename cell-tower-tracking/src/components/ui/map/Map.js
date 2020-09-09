@@ -19,6 +19,8 @@ function Map({ location, calcLocation, towers,}) {
             const { lat, lng } = location;
             const pixels = factory.pixelCoords(lat, lng);
             setLocationPixelCoords(pixels);
+        }else{
+            setLocationPixelCoords({});
         }
 
         if(calcLocation && 'location' in calcLocation && 'accuracy' in calcLocation){
@@ -28,6 +30,8 @@ function Map({ location, calcLocation, towers,}) {
                ...offsetCoordsMetres(location.lat, location.lng, accuracy, 0));
 
             setcalLocationPixelCoords({ location: calPixels, accuracy: calPixels.y - accPixels.y});
+        }else{
+            setcalLocationPixelCoords({});
         }
 
         if(towers && towers.length > 0){
@@ -35,6 +39,9 @@ function Map({ location, calcLocation, towers,}) {
                 { ...tower, ...factory.pixelCoords(Number(tower.lat),Number(tower.lon)) }
             ));
             setTowerPixelCoords(towerPixels);
+        }
+        else{
+            setTowerPixelCoords([]);
         }
     }, [location, calcLocation, towers]);
 
