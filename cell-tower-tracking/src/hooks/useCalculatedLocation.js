@@ -39,20 +39,25 @@ function useCalculatedLocation(location){
                     return { towers: towersResponse, location: locationResponse, distance};
                 });
 
-                let minDistance = 999999
-                let minIndex = 0;
-                const distances = await Promise.all(distancePromises);
-                distances.filter(distance => 'location' in distance)
-                    .forEach((distance, i) => {
+                let minDistance = 999999;
+                let minIndex = -1;
+                const distances = (await Promise.all(distancePromises)).filter(d => 'location' in d)
+                distances.forEach(({ distance }, i) => {
                         if(distance < minDistance){
                             minDistance = distance;
                             minIndex = i;
                         }
                 });
 
-                const minLocation = distances[minIndex];
-                setTowers(minLocation.towers);
-                setCalcLocation(minLocation.location);
+
+                if(minIndex > -1){
+                    const minLocation = distances[minIndex];
+                    setTowers(minLocation.towers);
+                    setCalcLocation(minLocation.location);
+                }else{
+                    setTowers([]);
+                    setCalcLocation({});
+                }
 
                 setIsLoading(false);
             }
