@@ -22,11 +22,10 @@ function App() {
     const location = coords ? { lat: coords.latitude, lng: coords.longitude } : {};
 
     const [isLoadingCalc, connectedTowers, calcLocation] = useCalculatedLocation(location);
-    const [isLoadingAllTowers, allTowers] = useFetch(() => Towers(location.lat, location.lng, 800), [], [isLoadingCalc]);
+    const [isLoadingAllTowers, allTowers] = useFetch(() => Towers(location.lat, location.lng, 800), [], [isLoading]);
 
     useEffect(() => {
         if(!isLoadingAllTowers && !isLoadingCalc){
-
             if(connectedTowers.length > 0 && allTowers.length > 0){
                 const unConnected = allTowers
                     .filter(({ id }) => !connectedTowers.find(t => t.id === id)) // filter out connected towers
@@ -45,6 +44,7 @@ function App() {
             setErrorMessage('Failed to get location');
         }
     }, [error])
+
 
     return (
         <div className={ styles.mapWrapper }>
