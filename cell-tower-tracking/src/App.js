@@ -12,6 +12,7 @@ import Placeholder from './components/ui/placeholder/Placeholder';
 import LoadingSpinner from './components/common/loading-spinner/LoadingSpinner';
 import Error from './components/common/error/Error';
 import Toast from './components/common/toast/Toast';
+import Footer from './components/ui/footer/footer';
 
 function App() {
     const [towers, setTowers] = useState([]);
@@ -64,6 +65,7 @@ function App() {
                 calcLocation={ isLoadingTowers ? {} : calcLocation } 
                 towers={ isLoadingTowers ? [] : towers }/>
             }
+            <Footer />
         </div>
     );
 }

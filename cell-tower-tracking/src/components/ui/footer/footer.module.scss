@@ -1,0 +1,16 @@
+.footer {
+    position: fixed;
+    display: flex;
+    left: 50%;
+    color: #ffffff7a;
+    font-size: 15px;
+    bottom: 0%;
+    transform: translate(-50%, -50%);
+
+    .icon {
+        height: 15px;
+        padding-left: 10px;
+        opacity: 0.5;
+    }
+}
+
