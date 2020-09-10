@@ -26,7 +26,7 @@ run `export APIKEY=[API_KEY]; npm start` to deploy the client.
 ### Server Deploy
 
 #### Cell Tower Data
-First step is to retrieve the necessary cell tower data. I found OpenCellid(https://opencellid.org/#zoom=16&lat=37.77889&lon=-122.41942) to be one the best
+First step is to retrieve the necessary cell tower data. I found [OpenCellid](https://opencellid.org/#zoom=16&lat=37.77889&lon=-122.41942) to be one the best
 sources, simply create an free account and download the cell tower data for your country.
 
 *note any mcc/mnc will work*
