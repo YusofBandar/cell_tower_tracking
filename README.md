@@ -21,7 +21,13 @@ Simply follow the [Google Maps documentation](https://developers.google.com/maps
 #### Client Run
 Before deploying you will need to add the Google Maps API key to the script tag located within `public/index.html`.
 
-run `export APIKEY=[API_KEY]; npm start` to deploy the client.
+To deploy the client run `npm start` with the following env vars
+
+```
+API_HOST - uri of server (e.g. http://localhost:5500)
+API_KEY - Google Maps api key 
+
+```
 
 ### Server Deploy
 
