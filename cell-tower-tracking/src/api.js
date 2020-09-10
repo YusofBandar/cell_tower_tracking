@@ -1,7 +1,7 @@
 import config from './config'
 import axios from 'axios';
 
-const API = axios.create({ baseURL: 'http://localhost:5501'});
+const API = axios.create({ baseURL: config.host});
 
 export const Towers = (lat, lng, range = 300) => API.get(`towers?lat=${lat}&lng=${lng}&range=${range}`)
                                                         .then((response) => response.data)
