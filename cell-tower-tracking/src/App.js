@@ -48,7 +48,7 @@ function App() {
 
 
     return (
-        <div className={ styles.mapWrapper }>
+        <div className={ styles.mapWrapper } style={{ height: window.innerHeight }}>
             { !isLoading && 
             <Toast show={ !isLoadingTowers && (!towers || towers.length < 1) }>Failed to calculate location</Toast> }
             <div className={`${styles.placeholder} ${(!isLoading && !error) ? styles.hide : ''}`}>
