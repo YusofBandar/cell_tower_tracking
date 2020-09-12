@@ -1,11 +1,10 @@
 .toast {
-    font-size: 40px;
-    color: #ffffff82;
+    font-size: 20px;
+    color: black;
     font-weight: 300;
-    border: solid 2px #bb1c1ca6;
-    border-radius: 10px;
-    padding: 20px 20px 5px 20px;
-    background: #000000a6;
+    border-radius: 20px;
+    padding: 15px;
+    background: #ff2f2fa6;
     z-index: 100;
     position: fixed;
     left: 50%;
@@ -13,12 +12,6 @@
     transform: translate(-50%, -50%);
     transition: top 0.5s; 
     transition-timing-function: cubic-bezier(0.6, -0.28, 0.74, 0.05); 
-
-    &::after {
-        content: ".";
-        color: #bb1c1ca6;
-        padding-left: 10px;
-    }
 
     &.show {
         top: 60px;
